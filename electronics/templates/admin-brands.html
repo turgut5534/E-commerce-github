@@ -1,0 +1,22 @@
+{% extends "admin-base.html" %}
+{% load static %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static "css/payment_methods.css" %}">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    <h1 class="text-center my-3">Product Brands</h1>
+    <div class="container">
+        <a class="btn btn-success" href="{% url "adminaddbrand" %}">+ Add Brand</a>
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            {% for b in brands %}
+                <div class="col-md-3 col-sm-6">
+                    <div class="payment-card">
+                        <h2 class="text-center"><a class="nav-link" href="">{{b.name|title}}</a></h2>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    </div>
+{% endblock %}

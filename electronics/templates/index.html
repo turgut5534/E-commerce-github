@@ -1,0 +1,853 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+
+<nav id="navigation">
+	<!-- container -->
+	<div class="container">
+		<!-- responsive-nav -->
+		<div id="responsive-nav">
+			<!-- NAV -->
+			<ul class="navbar navbar-light bg-light blok">
+				<li ><a class="nav-link text-dark" href="{% url "homepage" %}">Home</a></li>
+				<li><a class="nav-link text-dark" href="{% url "category" %}">Categories</a></li>
+				<li><a  class="nav-link text-dark" href="{% url "productsincategory" "phone" %}">Phone</a></li>
+				<li><a  class="nav-link text-dark" href="{% url "productsincategory" "laptop" %}">Laptop</a></li>
+				<li><a  class="nav-link text-dark" href="{% url "productsincategory" "tv" %}">TV</a></li>
+			</ul>
+			<!-- /NAV -->
+		</div>
+		<!-- /responsive-nav -->
+	</div>
+	<!-- /container -->
+</nav>
+
+
+		<div class="section">
+			<!-- container -->
+			<div class="container">
+				<!-- row -->
+				<div class="row">
+
+
+					{% for category in categories %}
+					<div class="col-md-4 col-xs-6">
+						<div class="shop">
+							<div class="shop-img">
+								<img src="{{category.image.url}}" alt="">
+							</div>
+							<div class="shop-body">
+								<h3>{{category.name|title}}<br>Collection</h3>
+								<a href="{% url "productsincategory" category.name %}" class="cta-btn">Shop now <i class="fa fa-arrow-circle-right"></i></a>
+							</div>
+						</div>
+					</div>
+					{% endfor %}
+
+				</div>
+				<!-- /row -->
+			</div>
+			<!-- /container -->
+		</div>
+		<!-- /SECTION -->
+
+		<!-- SECTION -->
+		<div class="section">
+			<!-- container -->
+			<div class="container">
+				<!-- row -->
+				<div class="row">
+
+					
+					<!-- section title -->
+
+					<ul class="nav nav-tabs" id="myTab" role="tablist">
+						<li class="nav-item" role="presentation">
+						  <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#tab1" type="button" role="tab" aria-controls="home" aria-selected="true">Laptop</button>
+						</li>
+						<li class="nav-item" role="presentation">
+						  <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#tab2" type="button" role="tab" aria-controls="profile" aria-selected="false">Phone</button>
+						</li>
+						<li class="nav-item" role="presentation">
+						  <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#tab3" type="button" role="tab" aria-controls="contact" aria-selected="false">TVs</button>
+						</li>
+					  </ul>
+					  
+					<div class="col-md-12">
+						<div class="section-title">
+							<h3 class="title">New Products</h3>
+						</div>
+					</div>
+
+					
+					<!-- /section title -->
+
+					<!-- Products tab & slick -->
+					<div class="col-md-12">
+						<div class="row">
+
+
+							<div class="products-tabs">
+								<!-- tab -->
+								<div id="tab1" class="tab-pane active">
+									<div class="products-slick" data-nav="#slick-nav-1">						
+
+										{% for n in new %}
+											{% if n.category.name == "laptop" %}
+										<div class="product">
+											<div class="product-img">
+												<img src="{{n.image.url}}" alt="">
+												<div class="product-label">
+													
+														{% if n.discount_applied %}
+														<span class="sale">
+														{{n.discount.name}} %20
+														</span>
+														{% else %}
+														{% endif %}
+													<span class="new">NEW</span>
+												</div>
+											</div>
+											<div class="product-body">
+												<p class="product-category">{{n.category}}</p>
+												<h3 class="product-name"><a href="{% url "product" n.slug %}">{{n.marka.name}} {{n.model}}</a></h3>
+												<h4 class="product-price">
+													{% if n.discount_applied %}
+													{{n.discount_price}}
+													<del class="product-old-price">{{n.price}} TL</del>
+													{% else %}
+													{{n.price}} TL
+													{% endif %}
+												</h4>
+												<div class="product-rating">
+													<i class="fa fa-star"></i>
+													<i class="fa fa-star"></i>
+													<i class="fa fa-star"></i>
+													<i class="fa fa-star"></i>
+													<i class="fa fa-star"></i>
+												</div>
+												{% if user.is_authenticated %}
+												<div class="product-btns">
+													<button id="wishlist_{{n.slug}}" class="add-to-wishlist" onclick="get_wish('{{n.slug}}')">
+														<i id="heart_{{n.slug}}" class={% if n not in wishlist %}"fa fa-heart-o"{% else %}"fa fa-heart"{% endif %}></i>
+														<span id="span_{{n.slug}}" class="tooltipp">{% if n not in wishlist %}Add to Wishlist{% else %}Delete from Wishlist{% endif %}</span>
+													</button>									
+												</div>
+												{% endif %}
+											</div>
+											<!-- 
+												<form action="{% url "card" %}" method="POST">
+													{% csrf_token %}
+													<input name="product_slug" type="hidden" value="{{n.slug}}">
+													<input type="hidden" name="operation" value="add" id="">
+												<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+												</form>
+											</div> -->
+											<div class="add-to-cart">
+												<button id="slug_{{n.slug}}" class="add-to-cart-btn" onclick="get_slug('{{n.slug}}')"><i class="fa fa-shopping-cart"></i> 
+												{% if user.is_authenticated %}
+													{% if n not in cart %}
+													ADD TO CART
+													{% else %}
+													DELETE FROM CART
+													{% endif %}
+												{% else %}
+													{% if n not in card %}
+													ADD TO CART
+													{% else %}
+													DELETE FROM CART
+													{% endif %}
+												{% endif %}
+												</button>
+											</div>
+
+										</div>
+											{% endif %}
+										{% endfor %}
+
+									</div>
+					
+								</div>
+								<!-- /tab -->
+								
+								<div id="tab2" class="tab-pane">
+									<div class="products-slick" data-nav="#slick-nav-1">						
+
+										{% for n in new %}
+											{% if n.category.name == "phone" %}
+										<div class="product">
+											<div class="product-img">
+												<img src="{{n.image.url}}" alt="">
+												<div class="product-label">
+													<span class="sale">
+														{% if n.discount_applied %}
+														<span class="sale">
+														{{n.discount.name}} %20
+														</span>
+														{% else %}
+														{% endif %}
+													</span>
+													<span class="new">NEW</span>
+												</div>
+											</div>
+											<div class="product-body">
+												<p class="product-category">{{n.category}}</p>
+												<h3 class="product-name"><a href="{% url "product" n.slug %}">{{n.marka.name}} {{n.model}}</a></h3>
+												<h4 class="product-price">
+													{% if n.discount_applied %}
+													{{n.discount_price}}
+													<del class="product-old-price">{{n.price}} TL</del>
+													{% else %}
+													{{n.price}} TL
+													{% endif %}
+												</h4>
+												<div class="product-rating">
+													<i class="fa fa-star"></i>
+													<i class="fa fa-star"></i>
+													<i class="fa fa-star"></i>
+													<i class="fa fa-star"></i>
+													<i class="fa fa-star"></i>
+												</div>
+												{% if user.is_authenticated %}
+												<div class="product-btns">
+													<button id="wishlist_{{n.slug}}" class="add-to-wishlist" onclick="get_wish('{{n.slug}}')">
+														<i id="heart_{{n.slug}}" class={% if n not in wishlist %}"fa fa-heart-o"{% else %}"fa fa-heart"{% endif %}></i>
+														<span id="span_{{n.slug}}" class="tooltipp">{% if n not in wishlist %}Add to Wishlist{% else %}Delete from Wishlist{% endif %}</span>
+													</button>									
+												</div>
+												{% endif %}
+											</div>
+											<div class="add-to-cart">
+												<!-- <form action="{% url "card" %}" method="POST">
+													{% csrf_token %}
+													<input name="product_slug" type="hidden" value="{{n.slug}}">
+													<input type="hidden" name="operation" value="add" id="">
+												<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+												</form> -->
+												<button id="slug_{{n.slug}}" class="add-to-cart-btn" onclick="get_slug('{{n.slug}}')"><i class="fa fa-shopping-cart"></i> 
+													{% if user.is_authenticated %}
+													{% if n not in cart %}
+													ADD TO CART
+													{% else %}
+													DELETE FROM CART
+													{% endif %}
+												{% else %}
+													{% if n not in card %}
+													ADD TO CART
+													{% else %}
+													DELETE FROM CART
+													{% endif %}
+												{% endif %}
+												</button>
+											</div>
+										</div>
+											{% endif %}
+										{% endfor %}
+
+									</div>
+								
+								</div>
+								
+								<div id="tab3" class="tab-pane">
+									<div class="products-slick" data-nav="#slick-nav-1">						
+
+										{% for n in new %}
+											{% if n.category.name == "tv" %}
+										<div class="product">
+											<div class="product-img">
+												<img src="{{n.image.url}}" alt="">
+												<div class="product-label">
+													<span class="sale">
+														{% if n.discount_applied %}
+														<span class="sale">
+														{{n.discount.name}} %20
+														</span>
+														{% else %}
+														{% endif %}
+													</span>
+													<span class="new">NEW</span>
+												</div>
+											</div>
+											<div class="product-body">
+												<p class="product-category">{{n.category}}</p>
+												<h3 class="product-name"><a href="{% url "product" n.slug %}">{{n.marka.name}} {{n.model}}</a></h3>
+												<h4 class="product-price">
+													{% if n.discount_applied %}
+													{{n.discount_price}}
+													<del class="product-old-price">{{n.price}} TL</del>
+													{% else %}
+													{{n.price}} TL
+													{% endif %}
+												</h4>
+												<div class="product-rating">
+													<i class="fa fa-star"></i>
+													<i class="fa fa-star"></i>
+													<i class="fa fa-star"></i>
+													<i class="fa fa-star"></i>
+													<i class="fa fa-star"></i>
+												</div>
+												{% if user.is_authenticated %}
+												<div class="product-btns">
+													<button id="wishlist_{{n.slug}}" class="add-to-wishlist" onclick="get_wish('{{n.slug}}')">
+														<i id="heart_{{n.slug}}" class={% if n not in wishlist %}"fa fa-heart-o"{% else %}"fa fa-heart"{% endif %}></i>
+														<span id="span_{{n.slug}}" class="tooltipp">{% if n not in wishlist %}Add to Wishlist{% else %}Delete from Wishlist{% endif %}</span>
+													</button>									
+												</div>
+												{% endif %}
+											</div>
+											<div class="add-to-cart">
+												<!-- <form action="{% url "card" %}" method="POST">
+													{% csrf_token %}
+													<input name="product_slug" type="hidden" value="{{n.slug}}">
+													<input type="hidden" name="operation" value="add" id="">
+												<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+												</form> -->
+												<button id="slug_{{n.slug}}" class="add-to-cart-btn" onclick="get_slug('{{n.slug}}')"><i class="fa fa-shopping-cart"></i> 
+													{% if user.is_authenticated %}
+													{% if n not in cart %}
+													ADD TO CART
+													{% else %}
+													DELETE FROM CART
+													{% endif %}
+												{% else %}
+													{% if n not in card %}
+													ADD TO CART
+													{% else %}
+													DELETE FROM CART
+													{% endif %}
+												{% endif %}
+												</button>
+											</div>
+										</div>
+											{% endif %}
+										{% endfor %}
+
+									</div>
+								
+								</div>
+
+
+							</div>
+						</div>
+					</div>
+					<!-- Products tab & slick -->
+				</div>
+				<!-- /row -->
+			</div>
+			<!-- /container -->
+		</div>
+		<!-- /SECTION -->
+
+		
+		<!-- SECTION -->
+		<div class="section">
+			<!-- container -->
+			<div class="container">
+				<!-- row -->
+				<div class="row">
+
+
+					<ul class="nav nav-tabs" id="myTab" role="tablist">
+						<li class="nav-item" role="presentation">
+						  <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#tabtop" type="button" role="tab" aria-controls="home" aria-selected="true">Laptop</button>
+						</li>
+						<li class="nav-item" role="presentation">
+						  <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#tabtop2" type="button" role="tab" aria-controls="profile" aria-selected="false">Phone</button>
+						</li>
+						<li class="nav-item" role="presentation">
+						  <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#tabtop3" type="button" role="tab" aria-controls="contact" aria-selected="false">TVs</button>
+						</li>
+					  </ul>
+
+					<!-- section title -->
+					<div class="col-md-12">
+						<div class="section-title">
+							<h3 class="title">Top selling</h3>
+						</div>
+					</div>
+					<!-- /section title -->
+
+					<!-- Products tab & slick -->
+					<div class="col-md-12">
+						<div class="row">
+							<div class="products-tabs">
+								<!-- tab -->
+								<div id="tabtop" class="tab-pane fade in active">
+									<div class="products-slick" data-nav="#slick-nav-2">
+										
+
+										{% for top in featured %}
+											{% if top.category.name == "laptop" %}
+										<div class="product">
+											<div class="product-img">
+												<img src="{{top.image.url}}" alt="">
+												<div class="product-label">
+													{% if top.discount_applied %}
+													<span class="sale">
+													{{top.discount.name}} %20
+													</span>
+													{% else %}
+													{% endif %}
+													<span class="new">NEW</span>
+												</div>
+											</div>
+											<div class="product-body">
+												<p class="product-category">{{top.category}}</p>
+												<h3 class="product-name"><a href="{% url "product" top.slug%}">{{top.marka.name}} {{top.model}}</a></h3>
+												<h4 class="product-price">
+													{% if top.discount_applied %}
+													{{top.discount_price}}
+													<del class="product-old-price">{{top.price}} TL</del>
+													{% else %}
+													{{top.price}} TL
+													{% endif %}
+													
+												</h4>
+												<div class="product-rating">
+													<i class="fa fa-star"></i>
+													<i class="fa fa-star"></i>
+													<i class="fa fa-star"></i>
+													<i class="fa fa-star"></i>
+													<i class="fa fa-star-o"></i>
+												</div>
+												{% if user.is_authenticated %}
+												<div class="product-btnstop">
+													<button id="wishlisttop_{{top.slug}}" class="add-to-wishlist" onclick="get_wishtop('{{top.slug}}')">
+														<i id="hearttop_{{top.slug}}" class={% if n not in wishlist %}"fa fa-heart-o"{% else %}"fa fa-heart"{% endif %}></i>
+														<span id="spantop_{{top.slug}}" class="tooltipp">{% if n not in wishlist %}Add to Wishlist{% else %}Delete from Wishlist{% endif %}</span>
+													</button>									
+												</div>
+												{% endif %}
+											</div>
+											
+											<div class="add-to-carttop cart-2">
+												<button id="topslug_{{top.slug}}" class="add-to-carttop-btn" onclick="get_topslug('{{top.slug}}')"><i class="fa fa-shopping-cart"></i> 
+												{% if user.is_authenticated %}
+													{% if n not in cart %}
+													ADD TO CART
+													{% else %}
+													DELETE FROM CART
+													{% endif %}
+												{% else %}
+													{% if n not in card %}
+													ADD TO CART
+													{% else %}
+													DELETE FROM CART
+													{% endif %}
+												{% endif %}
+												</button>
+											</div>
+										</div>
+											{% endif %}
+										{% endfor %}
+
+										
+									</div>
+							
+								</div>
+
+								<div id="tabtop2" class="tab-pane fade">
+									<div class="products-slick" data-nav="#slick-nav-2">
+										
+
+										{% for top in featured %}
+											{% if top.category.name == "phone" %}
+										<div class="product">
+											<div class="product-img">
+												<img src="{{top.image.url}}" alt="">
+												<div class="product-label">
+													<span class="new">NEW</span>
+												</div>
+											</div>
+											<div class="product-body">
+												<p class="product-category">{{top.category}}</p>
+												<h3 class="product-name"><a href="{% url "product" top.slug%}"> {{top.marka.name}} {{top.model}}</a></h3>
+												<h4 class="product-price">
+													{% if top.discount_applied %}
+													{{top.discount_price}}
+													<del class="product-old-price">{{top.price}} TL</del>
+													{% else %}
+													{{top.price}} TL
+													{% endif %}
+												</h4>
+												<div class="product-rating">
+													<i class="fa fa-star"></i>
+													<i class="fa fa-star"></i>
+													<i class="fa fa-star"></i>
+													<i class="fa fa-star"></i>
+													<i class="fa fa-star-o"></i>
+												</div>
+												{% if user.is_authenticated %}
+												<div class="product-btnstop">
+													<button id="wishlisttop_{{top.slug}}" class="add-to-wishlist" onclick="get_wishtop('{{top.slug}}')">
+														<i id="hearttop_{{top.slug}}" class={% if n not in wishlist %}"fa fa-heart-o"{% else %}"fa fa-heart"{% endif %}></i>
+														<span id="spantop_{{top.slug}}" class="tooltipp">{% if n not in wishlist %}Add to Wishlist{% else %}Delete from Wishlist{% endif %}</span>
+													</button>									
+												</div>
+												{% endif %}
+											</div>
+											<div class="add-to-carttop cart-2">
+												<button id="topslug_{{top.slug}}" class="add-to-carttop-btn" onclick="get_topslug('{{top.slug}}')"><i class="fa fa-shopping-cart"></i> 
+												{% if user.is_authenticated %}
+													{% if n not in cart %}
+													ADD TO CART
+													{% else %}
+													DELETE FROM CART
+													{% endif %}
+												{% else %}
+													{% if n not in card %}
+													ADD TO CART
+													{% else %}
+													DELETE FROM CART
+													{% endif %}
+												{% endif %}
+												</button>
+											</div>
+										</div>
+											{% endif %}
+										{% endfor %}
+
+									</div>
+								
+								</div>
+								
+								<div id="tabtop3" class="tab-pane fade">
+									<div class="products-slick" data-nav="#slick-nav-2">
+										
+
+										{% for top in featured %}
+											{% if top.category.name == "tv" %}
+										<div class="product">
+											<div class="product-img">
+												<img src="{{top.image.url}}" alt="">
+												<div class="product-label">
+													<span class="new">NEW</span>
+												</div>
+											</div>
+											<div class="product-body">
+												<p class="product-category">{{top.category}}</p>
+												<h3 class="product-name"><a href="{% url "product" top.slug%}"> {{top.marka.name}} {{top.model}}</a></h3>
+												<h4 class="product-price">
+													{% if top.discount_applied %}
+													{{top.discount_price}}
+													<del class="product-old-price">{{top.price}} TL</del>
+													{% else %}
+													{{top.price}} TL
+													{% endif %}
+												</h4>
+												<div class="product-rating">
+													<i class="fa fa-star"></i>
+													<i class="fa fa-star"></i>
+													<i class="fa fa-star"></i>
+													<i class="fa fa-star"></i>
+													<i class="fa fa-star-o"></i>
+												</div>
+												{% if user.is_authenticated %}
+												<div class="product-btnstop">
+													<button id="wishlisttop_{{top.slug}}" class="add-to-wishlist" onclick="get_wishtop('{{top.slug}}')">
+														<i id="hearttop_{{top.slug}}" class={% if n not in wishlist %}"fa fa-heart-o"{% else %}"fa fa-heart"{% endif %}></i>
+														<span id="spantop_{{top.slug}}" class="tooltipp">{% if n not in wishlist %}Add to Wishlist{% else %}Delete from Wishlist{% endif %}</span>
+													</button>									
+												</div>
+												{% endif %}
+											</div>
+											<div class="add-to-carttop cart-2">
+												<button id="topslug_{{top.slug}}" class="add-to-carttop-btn" onclick="get_topslug('{{top.slug}}')"><i class="fa fa-shopping-cart"></i> 
+												{% if user.is_authenticated %}
+													{% if n not in cart %}
+													ADD TO CART
+													{% else %}
+													DELETE FROM CART
+													{% endif %}
+												{% else %}
+													{% if n not in card %}
+													ADD TO CART
+													{% else %}
+													DELETE FROM CART
+													{% endif %}
+												{% endif %}
+												</button>
+											</div>
+										</div>
+											{% endif %}
+										{% endfor %}
+
+									</div>
+								
+								</div>
+
+
+								<!-- /tab -->
+							</div>
+						</div>
+					</div>
+					<!-- /Products tab & slick -->
+				</div>
+				<!-- /row -->
+			</div>
+			<!-- /container -->
+		</div>
+		<!-- /SECTION -->
+
+		
+
+		<!-- NEWSLETTER -->
+		<div id="newsletter" class="section">
+			<!-- container -->
+			<div class="container">
+				<!-- row -->
+				<div class="row">
+					<div class="col-md-12">
+						<div class="newsletter">
+							<p>Sign Up for the <strong>SEATTY</strong></p>
+							<form action="{% url "signupforupdates" %}" method="POST">
+								{% csrf_token %}
+								<input required class="input" name="emailforupdates" type="email" placeholder="Enter Your Email">
+								<button class="newsletter-btn"><i class="fa fa-envelope"></i> Subscribe</button>
+							</form>
+							<ul class="newsletter-follow">
+								<li>
+									<a href="https://www.facebook.com"><i class="fa fa-facebook"></i></a>
+								</li>
+								<li>
+									<a href="https://www.twitter.com"><i class="fa fa-twitter"></i></a>
+								</li>
+								<li>
+									<a href="https://www.instagram.com"><i class="fa fa-instagram"></i></a>
+								</li>
+								<li>
+									<a href="https://www.pinterest.com"><i class="fa fa-pinterest"></i></a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<!-- /row -->
+			</div>
+			<!-- /container -->
+		</div>
+
+	<footer id="footer">
+		
+
+	</footer>
+
+	<script>
+		
+		var have_slug;;
+		function get_slug(slug) {
+			have_slug=slug
+		}
+
+		$(".add-to-cart-btn").on("click", function(){
+			var slug= have_slug
+			var amount= parseInt(document.getElementById("qty").innerText)
+			if (document.getElementById("slug_"+slug).innerText=="ADD TO CART") {
+				console.log("Adding:", slug)
+				$.ajax({
+					url: "{% url "card" %}",
+					type: "POST",
+					headers:{
+						"X-CSRFToken": "{{csrf_token}}"
+					},
+					data:{"product_slug": slug, "operation": "add"},
+					success: function(resp){
+						document.querySelector('#slug_'+slug).innerHTML = 'DELETE FROM CART';
+						document.getElementById("qty").innerText= amount+1
+					},
+					error: function(resp){
+						console.log("something went wrong");
+					}
+				});
+			}
+
+			else {
+				console.log("Deleting")
+				$.ajax({
+					url: "{% url "card" %}",
+					type: "POST",
+					headers:{
+						"X-CSRFToken": "{{csrf_token}}"
+					},
+					data:{"product_slug": slug, "operation": "delete"},
+					success: function(resp){
+						document.querySelector('#slug_'+slug).innerHTML = 'ADD TO CART';
+						document.getElementById("qty").innerText= amount-1
+					},
+					error: function(resp){
+						console.log("something went wrong");
+					}
+				});
+			}
+
+		});
+	</script>
+
+
+<script>
+		
+	var have_slug;;
+	function get_topslug(slug) {
+		have_slug=slug
+	}
+
+	$(".add-to-carttop-btn").on("click", function(){
+		var slug= have_slug
+		var amount= parseInt(document.getElementById("qty").innerText)
+		if (document.getElementById("topslug_"+slug).innerText=="ADD TO CART") {
+			console.log("Adding:", slug)
+			$.ajax({
+				url: "{% url "card" %}",
+				type: "POST",
+				headers:{
+					"X-CSRFToken": "{{csrf_token}}"
+				},
+				data:{"product_slug": slug, "operation": "add"},
+				success: function(resp){
+					document.querySelector('#topslug_'+slug).innerHTML = 'DELETE FROM CART';
+					document.getElementById("qty").innerText= amount+1
+				},
+				error: function(resp){
+					console.log("something went wrong");
+				}
+			});
+		}
+
+		else {
+			console.log("Deleting")
+			$.ajax({
+				url: "{% url "card" %}",
+				type: "POST",
+				headers:{
+					"X-CSRFToken": "{{csrf_token}}"
+				},
+				data:{"product_slug": slug, "operation": "delete"},
+				success: function(resp){
+					document.querySelector('#topslug_'+slug).innerHTML = 'ADD TO CART';
+					document.getElementById("qty").innerText= amount+1
+				},
+				error: function(resp){
+					console.log("something went wrong");
+				}
+			});
+		}
+
+	});
+</script>
+
+
+<script>
+			
+	var have_wish;;
+	function get_wish(slug) {
+		have_wish=slug
+	}
+
+	$(".add-to-wishlist").on("click", function(){
+		var slug= have_wish
+		console.log(slug)
+		console.log("I am in wishlist")
+		if (document.getElementById("heart_"+slug).className.includes("heart-o")) {
+			console.log("Adding:", slug)
+			$.ajax({
+				url: "{% url "wishlist" %}",
+				type: "POST",
+				headers:{
+					"X-CSRFToken": "{{csrf_token}}"
+				},
+				data:{"wishlist_slug": slug, "operation": "add"},
+				success: function(resp){
+					document.getElementById("heart_"+slug).className="fa fa-heart";
+					document.getElementById("span_"+slug).innerText="Delete from Wishlist";
+					
+				},
+				error: function(resp){
+					console.log("something went wrong");
+				}
+			});
+		}
+
+		else {
+			console.log("Deleting")
+			$.ajax({
+				url: "{% url "wishlist" %}",
+				type: "POST",
+				headers:{
+					"X-CSRFToken": "{{csrf_token}}"
+				},
+				data:{"wishlist_slug": slug, "operation": "delete"},
+				success: function(resp){
+					document.getElementById("heart_"+slug).className="fa fa-heart-o";
+					document.getElementById("span_"+slug).innerText="Add to Wishlist";
+				},
+				error: function(resp){
+					console.log("something went wrong");
+				}
+			});
+		}
+
+	});
+</script>
+
+
+
+<script>
+			
+	var have_wish;;
+	function get_wishtop(slug) {
+		have_wish=slug
+	}
+
+	$(".product-btnstop").on("click", function(){
+		var slug= have_wish
+		console.log(slug)
+		console.log("I am in wishlist")
+		console.log(document.getElementById("hearttop_"+slug).className)
+		if (document.getElementById("hearttop_"+slug).className.includes("heart")) {
+			console.log("Adding:", slug)
+			$.ajax({
+				url: "{% url "wishlist" %}",
+				type: "POST",
+				headers:{
+					"X-CSRFToken": "{{csrf_token}}"
+				},
+				data:{"wishlist_slug": slug, "operation": "add"},
+				success: function(resp){
+					document.getElementById("hearttop_"+slug).className="fa fa-times";
+					document.getElementById("spantop_"+slug).innerText="Delete from Wishlist";
+					
+				},
+				error: function(resp){
+					console.log("something went wrong");
+				}
+			});
+		}
+
+		else {
+			console.log("Deleting")
+			$.ajax({
+				url: "{% url "wishlist" %}",
+				type: "POST",
+				headers:{
+					"X-CSRFToken": "{{csrf_token}}"
+				},
+				data:{"wishlist_slug": slug, "operation": "delete"},
+				success: function(resp){
+					document.getElementById("hearttop_"+slug).className="fa fa-heart";
+					document.getElementById("spantop_"+slug).innerText="Add to Wishlist";
+				},
+				error: function(resp){
+					console.log("something went wrong");
+				}
+			});
+		}
+
+	});
+</script>
+		{% endblock %}
+
+		{% block script %}
+    	{% endblock %}		
+		

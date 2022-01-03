@@ -1,0 +1,568 @@
+{% extends "base.html" %}
+		
+{% block content %}
+{% load mathfilters %}
+	
+		<!-- SECTION -->
+		<div class="section">
+			<!-- container -->
+			<div class="container">
+				<!-- row -->
+				<div class="row">
+					<!-- Product main img -->
+					<div class="col-md-5 col-md-push-2">
+						<div id="product-main-img">
+							<div class="product-preview">
+								<img src="{{product.image.url}}" alt="">
+							</div>
+							{% if product.imagetwo %}
+							<div class="product-preview">
+								<img src="{{product.imagetwo.url}}" alt="">
+							</div>
+							{% endif %}
+							{% if product.imagethree %}
+							<div class="product-preview">
+								<img src="{{product.imagethree.url}}" alt="">
+							</div>
+							{% endif %}
+							{% if product.imagefour %}
+							<div class="product-preview">
+								<img src="{{product.imagefour.url}}" alt="">
+							</div>
+							{% endif %}
+						</div>
+					</div>
+					<!-- /Product main img -->
+
+					<!-- Product thumb imgs -->
+					<div class="col-md-2  col-md-pull-5">
+						<div id="product-imgs">
+							<div class="product-preview">
+								<img src="{{product.image.url}}" alt="">
+							</div>
+							{% if product.imagetwo %}
+							<div class="product-preview">
+								<img src="{{product.imagetwo.url}}" alt="">
+							</div>
+							{% endif %}
+							{% if product.imagethree %}
+							<div class="product-preview">
+								<img src="{{product.imagethree.url}}" alt="">
+							</div>
+							{% endif %}
+							{% if product.imagefour %}
+							<div class="product-preview">
+								<img src="{{product.imagefour.url}}" alt="">
+							</div>
+							{% endif %}
+						</div>
+					</div>
+					<!-- /Product thumb imgs -->
+
+					<!-- Product details -->
+					<div class="col-md-5">
+						<div class="product-details">
+							<h2 class="product-name">{{product.marka.name}} {{product.model}}</h2>
+							<div>
+								<div class="product-rating">
+									<i class="fa fa-star"></i>
+									<i class="fa fa-star"></i>
+									<i class="fa fa-star"></i>
+									<i class="fa fa-star"></i>
+									<i class="fa fa-star-o"></i>
+								</div>
+								
+								{% if comment_amount > 0 %}
+								<a class="review-link" href="{% url "comments" product.slug 1 %}">{{total_comment}} Review(s)</a>
+								{% else %}
+								<a class="review-link" href="#">{{total_comment}} Review(s)</a>
+								{% endif %}
+							</div>
+							<div>
+						
+								{% if product.discount_applied %}
+					
+									<span class="sale">
+										{{product.discount.name}} %20
+										</span> <br>
+				
+								<h3 class="product-price">
+									<del class="product-old-price">{{product.price}} TL</del> <br>
+									{{product.discount_price}} TL
+								</h3>
+								{% else %}
+								<h3 class="product-price">{{product.price}} TL
+									
+								{% endif %}
+							
+								<span class="product-available">
+									{% if product.stock > 0 %}
+									IN STOCK
+									{% else %}
+									OUT OF STOCK
+									{% endif %}
+								</span>
+							</div>
+							
+							<div class="add-to-cart">
+								<div class="qty-label">
+									<div class="mt-2">		
+										<form action="">
+											<a href="{% url "checkout" %}?buy_now=True&product={{product.id}}" class="btn btn-secondary">Buy Now</a>
+										</form>	
+									</div>
+								</div>
+							</div>
+
+							<div class="add-to-cart">
+								<div class="qty-label">
+									<div class="">			
+												<button id="addcart" class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i>
+													{% if not is_incard %} 
+													ADD TO CART
+													{% else %}
+													DELETE FROM CART
+													{% endif %}
+													
+												</button>
+									</div>
+								</div>
+							</div>
+
+							{% if user.is_authenticated %}
+								<button id="addwishlist" class="btn btn-success"> 
+								{% if not in_wishlist %}
+								Add to Wishlist
+								{% else %}
+								Delete from Wishlist
+								{% endif %}
+								</button>						
+							{% endif %}
+
+							<ul class="product-links">
+								<li>Category:</li>
+								<li><a href="{% url "productsincategory" product.category.name  %}">{{product.category.name}}</a></li>
+					
+							</ul>
+
+							<ul class="product-links">
+								<li>Share:</li>
+								<li><a href="#"><i class="fa fa-facebook"></i></a></li>
+								<li><a href="#"><i class="fa fa-twitter"></i></a></li>
+								<li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+								<li><a href="#"><i class="fa fa-envelope"></i></a></li>
+							</ul>
+
+						</div>
+					</div>
+					<!-- /Product details -->
+
+					<!-- Product tab -->
+					<div class="col-md-12">
+						<div id="product-tab">
+							<div class="mx-auto">
+							<ul class="nav nav-tabs" id="myTab" role="tablist">
+								<li class="nav-item" role="presentation">
+								  <button class="nav-link text-secondary" id="profile-tab" data-bs-toggle="tab" data-bs-target="#tab2" type="button" role="tab" aria-controls="profile" aria-selected="true">Details</button>
+								</li>
+								<li class="nav-item " role="presentation">
+								  <button class="nav-link text-secondary" id="contact-tab" data-bs-toggle="tab" data-bs-target="#tab3" type="button" role="tab" aria-controls="contact" aria-selected="false">Reviews</button>
+								</li>
+							  </ul>
+							</div>
+							<!-- /product tab nav -->
+
+							<!-- product tab content -->
+							<div class="tab-content">
+							
+								<!-- tab2  -->
+								<div id="tab2" class="tab-pane fade in active">
+									<div class="tab-pane fade show active" id="pills-description" role="tabpanel" aria-labelledby="pills-description-tab">
+										<div class="row">
+											<div class="col-md-4">
+												<ul class="features">
+													{% for spec in specs %}
+														<li>{{spec.spec.name}}:</li>
+													{% endfor %}
+											<li>Warranty:</li>
+											<li>Weight</li>
+												</ul>
+											</div>
+		
+											<div class="col-md-4">
+												<ul class="features">
+												
+													{% for spec in specs %}
+														<li>{{spec.value}}</li>
+													{% endfor %}
+													<li>{{product.warranty}} years</li>	 
+													<li>{{product.weight|floatformat:0}} gr</li>   
+												</ul>
+											</div>
+								</div>
+								</div>
+							</div>
+								<!-- /tab2  -->
+
+								<!-- tab3  -->
+								<div id="tab3" class="tab-pane fade in">
+									<div class="row">
+										<!-- Rating -->
+										<div class="col-md-3 my-3">
+											<div id="rating">
+												<div class="rating-avg">
+													<span>
+														{% if product.rating %}
+															{{product.rating | floatformat:2 }}
+														{% else %}
+															0.0
+														{% endif %}
+													</span>
+													<div class="rating-stars">
+														{% if product.rating %}
+															{% for i in "x"|ljust:product.rating %}
+																		<i class="fa fa-star"></i>
+															{% endfor %}
+														{% endif %}
+													</div>
+												</div>
+												<ul class="rating">
+													<li>
+														<div class="rating-stars">
+															<i class="fa fa-star"></i>
+															<i class="fa fa-star"></i>
+															<i class="fa fa-star"></i>
+															<i class="fa fa-star"></i>
+															<i class="fa fa-star"></i>
+														</div>
+														<div class="rating-progress">
+															<div style="width: 80%;"></div>
+														</div>
+														<span class="sum">{{five_star}}</span>
+													</li>
+													<li>
+														<div class="rating-stars">
+															<i class="fa fa-star"></i>
+															<i class="fa fa-star"></i>
+															<i class="fa fa-star"></i>
+															<i class="fa fa-star"></i>
+															<i class="fa fa-star-o"></i>
+														</div>
+														<div class="rating-progress">
+															<div style="width: 60%;"></div>
+														</div>
+														<span class="sum">{{four_star}}</span>
+													</li>
+													<li>
+														<div class="rating-stars">
+															<i class="fa fa-star"></i>
+															<i class="fa fa-star"></i>
+															<i class="fa fa-star"></i>
+															<i class="fa fa-star-o"></i>
+															<i class="fa fa-star-o"></i>
+														</div>
+														<div class="rating-progress">
+															<div></div>
+														</div>
+														<span class="sum">{{three_star}}</span>
+													</li>
+													<li>
+														<div class="rating-stars">
+															<i class="fa fa-star"></i>
+															<i class="fa fa-star"></i>
+															<i class="fa fa-star-o"></i>
+															<i class="fa fa-star-o"></i>
+															<i class="fa fa-star-o"></i>
+														</div>
+														<div class="rating-progress">
+															<div></div>
+														</div>
+														<span class="sum">{{two_star}}</span>
+													</li>
+													<li>
+														<div class="rating-stars">
+															<i class="fa fa-star"></i>
+															<i class="fa fa-star-o"></i>
+															<i class="fa fa-star-o"></i>
+															<i class="fa fa-star-o"></i>
+															<i class="fa fa-star-o"></i>
+														</div>
+														<div class="rating-progress">
+															<div></div>
+														</div>
+														<span class="sum">{{one_star}}</span>
+													</li>
+												</ul>
+											</div>
+										</div>
+										<!-- /Rating -->
+
+										<!-- Reviews -->
+										<div class="col-md-6">
+											<div id="reviews">
+												<ul class="reviews my-3">
+										
+												{% if comments %}
+													{% for comment in comments %}
+													<li>
+														<div class="review-heading">
+															<h5 class="name">{{comment.user_name}}</h5>
+															<p class="date">{{comment.date}}</p>
+															<div class="review-rating">
+																{% for i in "x"|ljust:comment.rating %}
+																	<i class="fa fa-star"></i>
+																{% endfor %}
+																<br>
+															</div>
+														</div>
+														<div class="review-body mx-3">
+															<p>{{comment.text}}</p>
+														</div>
+													</li>
+													{% endfor %}
+													<br><br>
+													<div class="my-3">
+													<a href="{% url "comments" product.slug 1 %}" class="btn btn-primary">See All ({{total_comment}} Comments)</a>
+													</div>
+												{% else %}
+													<p>This product has no comment</p>
+												{% endif %}
+										
+												
+												</ul>
+												
+											</div>
+										</div>
+										<!-- /Reviews -->
+
+										<!-- Review Form -->
+										{% if is_bought %}
+										<div class="col-md-3 my-3">
+											<div id="review-form">
+												<form action="{% url "comments" product.slug 1 %}" method="POST" class="review-form">
+													{% csrf_token %}
+													<input type="hidden" value="{{product.slug}}" name="slug" id="">
+													<input class="input" name="name" type="text" placeholder="Your Name">
+													<input class="input" name="email" type="email" placeholder="Your Email">
+													<textarea class="input" name="review" placeholder="Your Review"></textarea>
+													<div class="input-rating">
+														<span>Your Rating: </span>
+														<div class="stars">
+															<input id="star5" name="rating" value="5" type="radio"><label for="star5"></label>
+															<input id="star4" name="rating" value="4" type="radio"><label for="star4"></label>
+															<input id="star3" name="rating" value="3" type="radio"><label for="star3"></label>
+															<input id="star2" name="rating" value="2" type="radio"><label for="star2"></label>
+															<input id="star1" name="rating" value="1" type="radio"><label for="star1"></label>
+														</div>
+													</div>
+													<button class="primary-btn">Submit</button>
+												</form>
+											</div>
+										</div>
+								
+										{% else %}
+
+										<div class="col-md-3 my-3">
+											<p>You can't comment before you buy or 
+												receive this product</p>
+										</div>
+										{% endif %}
+										<!-- /Review Form -->
+									</div>
+								</div>
+								<!-- /tab3  -->
+							</div>
+							<!-- /product tab content  -->
+						</div>
+					</div>
+					<!-- /product tab -->
+				</div>
+				<!-- /row -->
+			</div>
+			<!-- /container -->
+		</div>
+		<!-- /SECTION -->
+
+		<!-- Section -->
+		<div class="section">
+			<!-- container -->
+			<div class="container">
+				<!-- row -->
+				<div class="row">
+
+					<div class="col-md-12">
+						<div class="section-title text-center">
+							<h3 class="title">Related Products</h3>
+						</div>
+					</div>
+
+					<!-- product -->
+					{% for related_product in related_products %}
+					<div class="col-lg-3 col-md-3 col-xs-6">
+						<div class="product">
+							<div class="product-img">
+								<img src="{{related_product.image.url}}" alt="">
+								{% if related_product.discount_applied %} 
+								<div class="product-label">
+									<span class="sale">{{related_product.discount.name}} %{{related_product.discount.discount_percent}} </span>
+								</div>
+								{% endif %}
+							</div>
+							<div class="product-body">
+								<p class="product-category">{{related_product.category.name}}</p>
+								<h3 class="product-name"><a href="#">{{related_product.marka.name}} {{related_product.model}}</a></h3>
+								<h4 class="product-price">
+									{% if related_product.discount_applied %}
+									{{related_product.discount_price}} TL <del class="product-old-price">{{related_product.price}} TL</del>
+									{% else %}
+									{{related_product.price}} TL
+									{% endif %}
+									 
+									</h4>
+									<form action="{% url "wishlist" %}" method="POST">
+										<div class="product-btns">
+											
+												{% csrf_token %}
+											{% if related_product not in wishlist %}
+											<button class="add-to-wishlist"><i class="fa fa-shopping-cart"></i><span class="tooltipp">Add to Cart</span></button>
+												<input type="hidden" name="operation" value="add" id="">
+												<input name="wishlist_slug" type="hidden" value="{{related_product.slug}}">
+											</form>
+											{% else %}
+											<button class="add-to-wishlist"><i class="fa fa-shopping-cart"></i><span class="tooltipp">Delete from Cart</span></button>
+												<input type="hidden" name="operation" value="delete" id="">
+												<input name="wishlist_slug" type="hidden" value="{{related_product.slug}}">
+											{% endif %}
+										
+										</div>
+									</form>
+	
+
+								<form action="{% url "wishlist" %}" method="POST">
+									<div class="product-btns">
+										
+											{% csrf_token %}
+										{% if related_product not in wishlist %}
+											<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">Add to wishlist</span></button>
+											<input type="hidden" name="operation" value="add" id="">
+											<input name="wishlist_slug" type="hidden" value="{{related_product.slug}}">
+										</form>
+										{% else %}
+											<button class="add-to-wishlist"><i class="fa fa-times"></i><span class="tooltipp">Delete from wishlist</span></button>
+											<input type="hidden" name="operation" value="delete" id="">
+											<input name="wishlist_slug" type="hidden" value="{{related_product.slug}}">
+										{% endif %}
+									
+									</div>
+								</form>
+
+							</div>
+							<br>
+							
+						</div>
+					</div>
+					{% endfor %}
+					<!-- /product -->
+
+				
+
+				</div>
+				<!-- /row -->
+			</div>
+			<!-- /container -->
+		</div>
+		<!-- /Section -->
+
+
+
+		<script>
+			var slug= "{{product.slug}}";
+			$("#addcart").on("click", function(){
+				var amount= parseInt(document.getElementById("qty").innerText)
+				if (document.getElementById("addcart").innerText.includes("ADD")) {
+				$.ajax({
+					url: "{% url "card" %}",
+					type: "POST",
+					headers:{
+						"X-CSRFToken": "{{csrf_token}}"
+					},
+					data:{"product_slug": slug, "operation": "add"},
+					success: function(resp){
+						document.querySelector('#addcart').innerHTML = 'Delete from Cart';
+						document.getElementById("qty").innerText= amount+1
+					},
+					error: function(resp){
+						console.log("something went wrong");
+					}
+				});
+			}
+				else {
+				$.ajax({
+						url: "{% url "card" %}",
+						type: "POST",
+						headers:{
+							"X-CSRFToken": "{{csrf_token}}"
+						},
+						data:{"product_slug": slug, "operation": "delete"},
+						success: function(resp){
+							document.querySelector('#addcart').innerHTML = 'Add to Cart';
+							document.getElementById("qty").innerText= amount-1
+						},
+						error: function(resp){
+							console.log("something went wrong");
+						}
+					});
+				}
+			
+			});
+		
+		
+			
+			
+		</script>
+
+		<script>
+			var slug= "{{product.slug}}";
+			$("#addwishlist").on("click", function(){
+				if (document.getElementById("addwishlist").innerText=="Add to Wishlist") {
+				$.ajax({
+					url: "{% url "wishlist" %}",
+					type: "POST",
+					headers:{
+						"X-CSRFToken": "{{csrf_token}}"
+					},
+					data:{"wishlist_slug": slug, "operation": "add"},
+					success: function(resp){
+						document.querySelector('#addwishlist').innerHTML = 'Delete from Wishlist';
+					},
+					error: function(resp){
+						console.log("something went wrong");
+					}
+				});
+			}
+				else {
+				$.ajax({
+						url: "{% url "wishlist" %}",
+						type: "POST",
+						headers:{
+							"X-CSRFToken": "{{csrf_token}}"
+						},
+						data:{"wishlist_slug": slug, "operation": "delete"},
+						success: function(resp){
+							document.querySelector('#addwishlist').innerHTML = 'Add to Wishlist';
+						},
+						error: function(resp){
+							console.log("something went wrong");
+						}
+					});
+				}
+			
+			});
+		
+			
+		</script>
+		
+	{% endblock %}
+
+		
+

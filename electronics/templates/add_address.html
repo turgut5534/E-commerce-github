@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+    
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-12">
+            <form  action="{% url "add_address" %}" method="POST">
+                {% csrf_token %}
+                <div class="md-form md-outline my-3">
+                    <label data-error="wrong" data-success="right" for="newPass">Adres Name</label>
+                    <input required name="kind" type="text" id="newPass" class="form-control">
+                </div>
+                <div class="md-form md-outline my-3">
+                    <label data-error="wrong" data-success="right" for="newPass">City</label>
+                    <input required name="city" type="text" id="newPass" class="form-control">
+                </div>
+                <div class="md-form md-outline my-3">
+                    <label data-error="wrong" data-success="right" for="newPass">District</label>
+                    <input required name="district" type="text" id="newPass" class="form-control">
+                </div>
+                <div class="md-form md-outline my-3">
+                    <label data-error="wrong" data-success="right" for="newPass">Full Address</label>
+                    <input required name="full_address" type="text" id="newPass" class="form-control">
+                </div>
+                <div class="">
+                    <input type="hidden" name="from" value="{{from_url}}" id="">
+                <button class="btn btn-success btn-lg">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

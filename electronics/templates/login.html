@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="my-5">
+    <div class="container-fluid h-custom">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-md-9 col-lg-6 col-xl-5">
+          <img src="{% static "img/login.png" %}" class="img-fluid"
+            alt="Sample image">
+        </div>
+        <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+          <form action="{% url "user_login" %}" method="POST">
+            {% csrf_token %}
+            <!-- Email input -->
+            <div class="form-outline mb-4">
+              <input type="text" id="form3Example3" name="username" class="form-control form-control-lg"
+                placeholder="Enter your username" />
+        
+            </div>
+  
+            <!-- Password input -->
+            <div class="form-outline mb-3">
+              <input type="password" id="form3Example4" name="password" class="form-control form-control-lg"
+                placeholder="Enter password" />
+     
+            </div>
+  
+            <div class="d-flex justify-content-between align-items-center">
+              <!-- Checkbox -->
+
+              <a href="{% url "forgotpassword" %}" class="text-body mt-3">Forgot password?</a>
+            </div>
+  
+            <div class="text-center text-lg-start mt-4 pt-2">
+              <button type="submit" class="btn btn-primary btn-lg"
+                style="padding-left: 2.5rem; padding-right: 2.5rem;">Login</button> <br>
+                {% if has_error %}
+                <p class="text-danger my-3">Invalid username or password</p>
+                {% endif %}
+              <p class="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <a href="{% url "register" %}"
+                  class="link-danger">Register</a></p>
+            </div>
+  
+          </form>
+        </div>
+      </div>
+    </div>
+  
+  </section>
+
+{% endblock %}

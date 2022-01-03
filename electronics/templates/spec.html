@@ -1,0 +1,9 @@
+<div class="form-group">
+    <label class="col-md-4 control-label" for="product_categorie">Specs</label>
+    <div class="col-md-4">
+        {% for spec in specs %}
+            <label for="">{{spec.name}}</label>
+            <input type="text" name="{{spec.name}}" id="">
+        {% endfor %}
+    </div>
+</div>

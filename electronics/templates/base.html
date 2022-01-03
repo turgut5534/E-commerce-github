@@ -1,0 +1,279 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seatty Ecommerce Template</title>
+
+    <!-- Google font -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
+
+    <!-- Bootstrap -->
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <!-- Slick -->
+    <link type="text/css" rel="stylesheet" href="{% static "css/slick.css" %}"/>
+    <link type="text/css" rel="stylesheet" href="{% static "css/slick-theme.css" %}"/>
+
+    <!-- nouislider -->
+    <link type="text/css" rel="stylesheet" href="{% static "css/nouislider.min.css" %}"/>
+
+    <!-- Font Awesome Icon -->
+    <link rel="stylesheet" href="{% static "css/font-awesome.min.css" %}">
+
+    <!-- Custom stlylesheet -->
+    <link type="text/css" rel="stylesheet" href="{% static "css/style.css" %}"/>
+
+
+    {% block css %}
+    {% endblock %}
+    <script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
+</head>
+<body>
+
+    <header>
+        <!-- TOP HEADER -->
+        <div id="top-header">
+            <div class="container">
+                <ul class="header-links pull-left">
+                    <li><a class="sepet" href="tel:+905427792551"><i class="fa fa-phone"></i> +90 542 779 25 51</a></li>
+                    <li><a class="sepet" href="mailto:seatty@gmail.com"><i class="fa fa-envelope-o"></i> seatty@gmail.com</a></li>
+                    <li><a class="sepet" href="https://www.google.com/maps/place/Mersin+University+Rector/@36.7875075,34.5225327,17z/data=!3m1!4b1!4m5!3m4!1s0x15278ac93d5a3f71:0x7eb846bcbf77920e!8m2!3d36.7875032!4d34.5247267"><i class="fa fa-map-marker"></i> Mersin University</a></li>
+                </ul>
+                <ul class="header-links pull-right">
+                    {% if user.is_authenticated %}
+                    <li><a class="sepet" href="{% url "profile" %}"><i class="fa fa-user-o"></i> My Account</a></li>
+                    <li><a class="sepet" href="{% url "user_logout" %}">Logout</a></li>
+                    {% else %}
+                    <li><a class="sepet" href="{% url "register" %}"><i class="fa fa-user-o"></i> Register</a></li>
+                    <li><a class="sepet" href="{% url "user_login" %}"><i class="fa fa-user-o"></i> Login</a></li> 
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+
+        <div id="header">
+            <!-- container -->
+            <div class="container">
+                <!-- row -->
+                <div class="row">
+                    <!-- LOGO -->
+                    <div class="col-md-12 col-lg-3">
+                        <div class="header-logo">
+                            <a href="{% url "homepage" %}" class="logo">
+                                <img class="logo" src="{% static "img/seatty3.png" %}" alt="">
+                            </a>
+                        </div>
+                    </div>
+                    <!-- /LOGO -->
+
+                    <!-- SEARCH BAR -->
+                    <div class="col-md-12 col-lg-6 text-center">
+                        <div class="header-search">
+                            <form>                              
+                                <input id="search_product" class="input" placeholder="Search here">
+                                <a href="{% url "search" %}" onclick="this.href+='?item='+ document.getElementById('search_product').value" class="btn btn-danger">Search</a>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- /SEARCH BAR -->
+
+                    <!-- ACCOUNT -->
+                    <div class="col-md-12 col-lg-3 clearfix">
+                        <div class="header-ctn">
+                            <!-- Wishlist -->
+                            <div>
+                                <a class="sepet" href="{% url "wishlist" %}">
+                                    <i class="fa fa-heart-o"></i>
+                                    <span>Your Wishlist</span>
+                                </a>
+                            </div>
+
+                            <div>
+                                <a class="sepet" href="{% url "card" %}">
+                                    <i class="fa fa-shopping-cart"></i>
+                                    <span>Your Card</span>
+                                    <div id="qty" class="qty">
+                                        {% if card %}
+                                        {{amount}}
+                                        {% else %}
+                                        0
+                                        {% endif %}
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="menu-toggle">
+                                <a href="#">
+                                    <i class="fa fa-bars"></i>
+                                    <span>Menu</span>
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                                     
+                            
+                        </div>
+                    </div>
+               
+                </div>
+                <!-- row -->
+    </header>
+
+    
+        
+
+
+    {% block content %}
+    {% endblock %}
+
+    <footer id="footer">
+        <!-- top footer -->
+        <div class="section">
+            <!-- container -->
+            <div class="container">
+                <!-- row -->
+                <div class="row">
+                    <div class="col-lg-3 col-md-3 col-xs-6">
+                        <div class="footer">
+                            <h3 class="footer-title">About Us</h3>
+                            <p>We are 6 people in our e-commerce group. Sercan-Emre-Abdurrahman-Turgut-Tolga-Yasin</p>
+                            <ul class="footer-links">
+                                <li><a href="#"><i class="fa fa-map-marker"></i>Mersin University</a></li>
+                                <li><a href="#"><i class="fa fa-phone"></i>+90 542 779 25 51</a></li>
+                                <li><a href="#"><i class="fa fa-envelope-o"></i>maci@mersin.edu.tr</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-xs-6">
+                        <div class="footer">
+                            <h3 class="footer-title">Categories</h3>
+                            <ul class="footer-links">
+                                <li><a href="{% url "productsincategory" "laptop" %}">Laptops</a></li>
+                                <li><a href="{% url "productsincategory" "phone" %}">Phones</a></li>
+                                <li><a href="{% url "productsincategory" "tv" %}">TVs</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                
+                    <div class="col-lg-3 col-md-3 col-xs-6">
+                        <div class="footer">
+                            <h3 class="footer-title">Information</h3>
+                            <ul class="footer-links">
+                                <li><a href="{% url "about" %}">About Us</a></li>
+                                <li><a href="{% url "contact" %}">Contact Us</a></li>
+                                <li><a href="{% url "privacypolicy" %}">Privacy Policy</a></li>
+                                <li><a href="{% url "myorders" %}">Orders and Returns</a></li>
+                                <li><a href="{% url "faq" %}">FAQ</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-xs-6">
+                        <div class="footer">
+                            <h3 class="footer-title">Service</h3>
+                            <ul class="footer-links">
+                                <li><a href="{% url "profile" %}">My Account</a></li>
+                                <li><a href="{% url "card" %}">View Cart</a></li>
+                                <li><a href="{% url "wishlist" %}">Wishlist</a></li>
+                                <li><a href="{% url "myorders" %}">Track My Order</a></li>
+                                <li><a href="#">Help</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- /row -->
+            </div>
+            <!-- /container -->
+        </div>
+        <!-- /top footer -->
+
+
+    {% block script %}
+    {% endblock %}
+    <script src="{% static "js/jquery.min.js" %}"></script>
+		<!-- JavaScript Bundle with Popper -->
+        <script>
+            function autocomplete(inp, arr) {
+              var currentFocus;
+              inp.addEventListener("input", function(e) {
+                  var a, b, i, val = this.value;
+                  closeAllLists();
+                  if (!val) { return false;}
+                  currentFocus = -1;
+                  a = document.createElement("DIV");
+                  a.setAttribute("id", this.id + "autocomplete-list");
+                  a.setAttribute("class", "autocomplete-items");
+                  this.parentNode.appendChild(a);
+                  for (i = 0; i < arr.length; i++) {
+                    if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                      b = document.createElement("DIV");
+                      b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                      b.innerHTML += arr[i].substr(val.length);
+                      b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                      b.addEventListener("click", function(e) {
+                          inp.value = this.getElementsByTagName("input")[0].value;
+                          closeAllLists();
+                      });
+                      a.appendChild(b);
+                    }
+                  }
+              });
+              inp.addEventListener("keydown", function(e) {
+                  var x = document.getElementById(this.id + "autocomplete-list");
+                  if (x) x = x.getElementsByTagName("div");
+                  if (e.keyCode == 40) {
+                    currentFocus++;
+                    addActive(x);
+                  } else if (e.keyCode == 38) { 
+                    currentFocus--;
+                    addActive(x);
+                  } else if (e.keyCode == 13) {
+                    e.preventDefault();
+                    if (currentFocus > -1) {
+                      if (x) x[currentFocus].click();
+                    }
+                  }
+              });
+              function addActive(x) {
+                if (!x) return false;
+                removeActive(x);
+                if (currentFocus >= x.length) currentFocus = 0;
+                if (currentFocus < 0) currentFocus = (x.length - 1);
+                x[currentFocus].classList.add("autocomplete-active");
+              }
+              function removeActive(x) {
+                for (var i = 0; i < x.length; i++) {
+                  x[i].classList.remove("autocomplete-active");
+                }
+              }
+              function closeAllLists(elmnt) {
+                var x = document.getElementsByClassName("autocomplete-items");
+                for (var i = 0; i < x.length; i++) {
+                  if (elmnt != x[i] && elmnt != inp) {
+                    x[i].parentNode.removeChild(x[i]);
+                  }
+                }
+
+              document.addEventListener("click", function (e) {
+                  closeAllLists(e.target);
+              });
+            }
+
+            // var products= {{all_products|safe}};
+            var products=["samsun", "ankara"];
+            autocomplete(document.getElementById("search_product"), products);
+            </script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+		<script src="{% static "js/slick.min.js" %}"></script>
+		<script src="{% static "js/nouislider.min.js" %}"></script>
+		<script src="{% static "js/jquery.zoom.min.js" %}"></script>
+		<script src="{% static "js/main.js" %}"></script>
+</body>
+</html>

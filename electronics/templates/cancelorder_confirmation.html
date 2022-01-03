@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static "css/delete_address.css" %}">
+<div class="ozel" id="id01">
+    <form class="modal-content" action="{% url "cancelorder" %}" method="POST">
+        {% csrf_token %}
+      <div class="ozelcontainer">
+        <h1>Cancel Order</h1>
+        <p>Are you sure you want to cancel your order?</p>   
+        <div class="clearfix">
+          <a href="{% url "myorders" %}">Cancel</a>
+          <input type="hidden" name="id" value="{{id}}" id="">
+          <button class="deletebtn">Continue</button>
+        </div>
+      </div>
+    </form>
+  </div>
+{% endblock %}

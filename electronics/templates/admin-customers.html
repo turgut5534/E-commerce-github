@@ -1,0 +1,38 @@
+{% extends "admin-base.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-12">
+              
+            </div>
+            {% for c in customers %}
+            <div class="col-lg-3 col-md-6 mt-2">
+                <div class="card" style="width: 18rem;">
+                    <img width="500px" height="300px" {% if c.image %}src="{{c.image.url}}"{% else %} src="{% static "img/no_profile.png" %}" {% endif %}class="card-img-top" alt="...">
+                    <div class="card-body">
+                      <h5 class="card-title">{{c.user.first_name}} {{c.user.last_name}}</h5>
+                      <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><b>Sex: </b>{% if c.sex %}{{c.sex}}{% else %}Unknown{% endif %}</li>
+                        <li class="list-group-item"><b>Email: </b>{{c.user.email}}</li>
+                        <!-- <li class="list-group-item">A third item</li> -->
+                      </ul>
+                      <a class="btn btn-danger d-none" id="{{c.id}}" href="{% url "admindeletecustomer" c.id %}">Delete</a>
+                      <button onclick="if (confirm('Are you sure?')) {
+                        event.preventDefault();
+                        document.getElementById('{{c.id}}').click();
+                      }
+                      else{
+                          event.preventDeafult();
+                      }
+                      " class="btn btn-danger py-2 ml-1" >Delete</button>
+                      <a href="" class="btn btn-primary">Edit</a>
+                    </div>
+                  </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+

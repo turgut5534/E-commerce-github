@@ -1,0 +1,51 @@
+{% extends "admin-base.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="container mt-5">
+
+        
+
+        <div class="row">
+            <div class="col-12">
+                <nav class="navbar navbar-expand-lg navbar-light mb-3">
+                    <p class="navbar-brand" href="#"><h3>{{category.name|title}}</h3></p>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                      <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                      <ul class="navbar-nav">
+                        <li class="nav-item"><a class="nav-link text-danger" href="{% url "adminaddproductseach" category.name %}">+ Add {{category.name|title}}</a></li>
+                      </ul>
+                    </div>
+                  </nav>
+            </div>
+            {% for p in products %}
+            <div class="col-lg-3 col-md-6">
+                <div class="card" style="width: 18rem;">
+                    <img src="{{p.image.url}}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                      <h5 class="card-title">{{p.marka.name}} {{p.model}}</h5>
+                      <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><b>{% if p.discount_applied %} <span class="text-danger">With Discount: </span> {{p.discount_price}}{% else %}{{p.price}} {% endif %} TL</b></li>
+                        <li class="list-group-item"><b>In stock: {{p.stock}}</b></li>
+                        <!-- <li class="list-group-item">A third item</li> -->
+                      </ul>
+                      <a class="btn btn-danger d-none" id="{{p.id}}" href="{% url "admindeleteproductseach" p.id %}">Delete</a>
+                      <button onclick="if (confirm('Are you sure?')) {
+                        event.preventDefault();
+                        document.getElementById('{{p.id}}').click();
+                      }
+                      else{
+                          event.preventDeafult();
+                      }
+                      " class="btn btn-danger py-2 ml-1" href="">Delete</button>
+                      <a href="{% url "adminaddproductseach" p.category.name %}?the_product={{p.id}}" class="btn btn-primary">Edit</a>
+                    </div>
+                  </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+

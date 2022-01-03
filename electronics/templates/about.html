@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static "css/about.css" %}">
+
+<div class="container text-center my-5">
+    <h1 class="mb-0">Meet our agents</h1><span>There are six members in our team. You can see our members down below.</span>
+</div>
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="bg-white p-3 text-center rounded box"><img class="img-responsive rounded-circle" src="{% static "img/team/turgut.jpg" %}" width="90">
+                <h5 class="mt-3 name">Turgut Salgın</h5><span class="work d-block">Backend Developer</span>
+                <div class="mt-4 about"><span>is the backend developer of this website</span></div>
+                <div class="mt-4">
+                    <h6 class="v-profile">View Profile</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="bg-white p-3 text-center rounded box"><img class="img-responsive rounded-circle" src="{% static "img/team/no_profile.png" %}" width="90">
+                <h5 class="mt-3 name">Abdurrahman Varol</h5><span class="work d-block">Database Manager</span>
+                <div class="mt-4 about"><span>is the database designer of this website.</span></div>
+                <div class="mt-4">
+                    <h6 class="v-profile">View Profile</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="bg-white p-3 text-center rounded box"><img class="img-responsive rounded-circle" src="{% static "img/team/yasinoztas.jpg" %}" width="90">
+                <h5 class="mt-3 name">Yasin Öztaş</h5><span class="work d-block">React Developer</span>
+                <div class="mt-4 about"><span>is the react developer of this website.</span></div>
+                <div class="mt-4">
+                    <h6 class="v-profile">View Profile</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="bg-white p-3 text-center rounded box"><img class="img-responsive rounded-circle" src="{% static "img/team/sercan.jpg" %}" width="90">
+                <h5 class="mt-3 name">Sercan Teyhani</h5><span class="work d-block">Frontend Developer</span>
+                <div class="mt-4 about"><span>is the frontend developer of this website.</span></div>
+                <div class="mt-4">
+                    <h6 class="v-profile">View Profile</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="bg-white p-3 text-center rounded box"><img class="img-responsive rounded-circle" src="{% static "img/team/no_profile.png" %}" width="90">
+                <h5 class="mt-3 name">Emre Eynallı</h5><span class="work d-block">Frontend Developer</span>
+                <div class="mt-4 about"><span>is the frontend developer of this website.</span></div>
+                <div class="mt-4">
+                    <h6 class="v-profile">View Profile</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="bg-white p-3 text-center rounded box"><img class="img-responsive rounded-circle" src="{% static "img/team/no_profile.png" %}" width="90">
+                <h5 class="mt-3 name">Tolgahan Köse</h5><span class="work d-block">Frontend Developer</span>
+                <div class="mt-4 about"><span>is the frontend developer of this website.</span></div>
+                <div class="mt-4">
+                    <h6 class="v-profile">View Profile</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

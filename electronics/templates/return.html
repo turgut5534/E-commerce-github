@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static "css/change-password.css" %}">
+<!--Section: Block Content-->
+
+<div class="container my-5">
+    <div class="row justify-content-center ozel2">
+        <div class="col-md-12 col-lg-8">
+            
+        
+            <form action="{% url "returnproduct" product.id %}" method="POST">
+                {% csrf_token %}
+
+            <div class="md-form md-outline my-3">
+                <label class="text-center">Why do you want to return this product?</label> <br> <br>
+                <input type="radio" id="html" name="reason" value="I didn't like it">
+                <label for="html">I didn't like it</label><br>
+                <input type="radio" id="css" name="reason" value="Wrong product was sent to me">
+                <label for="css">Wrong product was sent to me</label><br>
+                <input type="radio" id="javascript" name="reason" value="I bought wrong product">
+                <label for="javascript">I bought wrong product</label> 
+                <label for="">Can you please tell us more</label><br>
+                <textarea class="from-control mt-3" name="textwhy" id="" cols="30" rows="10"></textarea>
+            </div>
+            <input type="hidden" name="order_id" value="{{order.id}}" id="">
+            <button type="submit" class="btn btn-danger my-4">Send Return Request</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

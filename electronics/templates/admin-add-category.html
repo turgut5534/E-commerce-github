@@ -1,0 +1,30 @@
+{% extends "admin-base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static "css/change-password.css" %}">
+<!--Section: Block Content-->
+
+<div class="container my-5">
+    <div class="row justify-content-center ozel2">
+        <div class="col-md-12 col-lg-8">
+            
+        
+            <form action="{% url "adminaddcategory" %}" method="POST">
+                {% csrf_token %}
+
+                <div class="md-form md-outline">
+                    <label class="form-label">Name</label>
+                    <input value="{{the_product.model}}" class="form-control" type="text" name="category_name">
+                </div>
+
+                <button type="submit" class="btn btn-primary my-4">Save</button>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

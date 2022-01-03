@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static "css/categories.css" %}">
+
+<div class="container-fluid mt-3">
+    <div class="row">
+        {% for category in categories %}
+        <div class="col-md-2 col-sm-4">
+            <div class="card mb-30"><a class="card-img-tiles" href="{% url "productsincategory"  category.name %}" data-abc="true">
+                    <div class="inner">
+                        <div class="main-img"><img src="{{category.image.url}}" alt="Category"></div>  
+                    </div>
+                    <hr>
+                    <div class="card-body text-center">
+                        <h4 class="card-title">{{category.name|title}}</h4>
+                      
+                    </div>
+                </a>
+                
+            </div>
+        </div>
+        {% endfor %}
+      
+    </div>
+</div>
+   
+{% endblock %}

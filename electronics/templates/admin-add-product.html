@@ -1,0 +1,148 @@
+{% extends "admin-base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static "css/change-password.css" %}">
+<!--Section: Block Content-->
+
+<div class="container my-5">
+    <div class="row justify-content-center ozel2">
+        <div class="col-md-12 col-lg-8">
+            
+        
+            <form action="{% url "adminaddproductseach" category %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="md-form md-outline my-3">
+                    <input class="form-control" name="imageone" type="file" id="resim" class="form-control">
+                </div>
+
+                <div class="md-form md-outline my-3">
+                    <input class="form-control" name="imagetwo" type="file" id="resim" class="form-control">
+                </div>
+
+                <div class="md-form md-outline my-3">
+                    <input class="form-control" name="imagethree" type="file" id="resim" class="form-control">
+                </div>
+
+                <div class="md-form md-outline my-3">
+                    <input class="form-control" name="imagefour" type="file" id="resim" class="form-control">
+                </div>
+
+                <div class="md-form md-outline my-3">
+                    <label>Marka</label>
+                    <select class="form-control" name="productbrand" id="">
+                        {% if the_product %}
+                            <option selected value="{{the_product.marka.name}}">{{the_product.marka.name}}</option>
+                        {% endif %}
+                        {% for brand in brands %}
+                            {% if brand.name != the_product.marka.name %}
+                                <option value="{{brand.name}}">{{brand.name}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="md-form md-outline my-3">
+                    <label>Model</label>
+                    <input value="{{the_product.model}}" class="form-control" type="text" name="model">
+                </div>
+
+                <div class="md-form md-outline my-3">
+                    <label>Price</label>
+                    <input value="{{the_product.price}}" class="form-control" type="text" name="price">
+                </div>
+
+                <div class="my-3">
+                    <input {% if the_product and the_product.discount_applied %}checked{% endif %} type="checkbox" onclick="goster()" name="discount" id="d_applied">
+                    <label for="d_applied">Has Discount</label>
+                </div>
+
+                <div class="d-none" id="gizle">
+                    <div class="md-form md-outline my-3">
+                        <label>Discount Price</label>
+                        <input {% if the_product and the_product.discount_applied %}value="{{the_product.discount_price}}"{% endif %}  class="form-control" type="text" name="discountprice">
+                    </div>
+
+                    <div class="md-form md-outline my-3">
+                        <label>Discount Name</label>
+                        <select class="form-control" name="discount_name" id="">
+                            {% if the_product %}
+                                <option selected value="{{the_product.discount.name}}">{{the_product.discount.name}}</option>
+                            {% endif %}
+                            {% for d in discounts %}
+                                {% if d.name != the_product.discount.name %}
+                                    <option value="{{d.name}}">{{d.name}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="md-form md-outline my-3">
+                    <label>Weight</label>
+                    <input value="{{the_product.weight}}" class="form-control" type="text" name="weight">
+                </div>
+                
+                <div class="md-form md-outline my-3">
+                    <label>Warranty</label>
+                    <input value="{{the_product.warranty}}" class="form-control" type="text" name="warranty">
+                </div>
+
+                <div class="md-form md-outline my-3">
+                    <label>Stock</label>
+                    <input value="{{the_product.stock}}" class="form-control" type="text" name="stock">
+                </div>
+                
+                <div class="my-3">
+                    <input {% if the_product and the_product.is_new %}checked{% endif %} type="checkbox" name="is_new" id="isnew">
+                    <label for="isnew">Is New</label>
+                </div>
+
+                <div class="my-3">
+                    <input {% if the_product and the_product.is_featured %}checked{% endif %} type="checkbox" name="is_featured" id="isfeatured">
+                    <label for="isfeatured">Is Featured</label>
+                </div>
+
+                {% for s in spec %}
+                    <div class="md-form md-outline my-3">
+                        <label>{{s.name}}</label>
+                        <input value="{{the_product.specs.spec.name}}" class="form-control" type="text" name="{{s.name}}">
+                    </div>
+                {% endfor %}
+
+                {% if the_product %}
+                    <input type="hidden" name="operation" value="update" id="">
+                    <input type="hidden" name="product_id" value="{{the_product.id}}" id="">
+                {% endif %}
+                <button type="submit" class="btn btn-primary my-4">Save</button>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function goster() {
+        var kontrol= document.getElementById("d_applied")
+        if (kontrol.checked == true ) {
+            document.getElementById("gizle").className=""
+        }
+        else {
+            document.getElementById("gizle").className="d-none"
+        }
+        
+    }
+
+    var kontrol= document.getElementById("d_applied")
+        if (kontrol.checked == true ) {
+            document.getElementById("gizle").className=""
+        }
+        else {
+            document.getElementById("gizle").className="d-none"
+        }
+        
+</script>
+
+{% endblock %}

@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div id="store" class="col-md-12">
+            <!-- store top filter -->
+            <div class="store-filter clearfix">
+                <div class="store-sort">
+                    <label>
+                        Sort By:
+                        <select class="input-select">
+                            <option value="0">Popular</option>
+                            <option value="1">Position</option>
+                        </select>
+                    </label>
+        
+                    <label>
+                        Show:
+                        <select class="input-select">
+                            <option value="0">20</option>
+                            <option value="1">50</option>
+                        </select>
+                    </label>
+                </div>
+              
+            </div>
+            <!-- /store top filter -->
+        
+            <!-- store products -->
+            <div class="row mb-5">
+                <!-- product -->
+                {% for product in related_products %}
+                <div class="col-md-6 col-lg-4 col-xs-6">
+                    <div class="product">
+                        <div class="product-img">
+                            <img src="{{product.image.url}}" alt="">
+                            <div class="product-label">
+                                <!-- <span class="sale">-30%</span> -->
+                                
+                                    {% if product.is_new %}
+                                    <span class="new">NEW</span>
+                                    {% endif %}											
+                            </div>
+                        </div>
+                        <div class="product-body">
+                            <p class="product-category">{{product.category.name}}</p>
+                            <h3 class="product-name"><a href="{% url "product" product.slug %}">{{product.marka.name}} {{product.model}}</a></h3>
+                            <h4 class="product-price">
+                                {% if product.discount %}
+                                {{product.discount_price}} TL
+                                <del class="product-old-price">{{product.price}}</del></h4>
+                                {% else %}
+                                {{product.price}} TL
+                                {% endif %}
+                                
+                                 <del class="product-old-price"></del></h4>
+                            <div class="product-rating">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            </div>
+                            <form action="{% url "wishlist" %}" method="POST">
+                                <div class="product-btns">
+                                    
+                                        {% csrf_token %}
+                                    {% if product not in wishlist %}
+                                        <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">Add to wishlist</span></button>
+                                        <input type="hidden" name="operation" value="add" id="">
+                                        <input name="wishlist_slug" type="hidden" value="{{product.slug}}">
+                                    </form>
+                                    {% else %}
+                                        <button class="add-to-wishlist"><i class="fa fa-times"></i><span class="tooltipp">Delete from wishlist</span></button>
+                                        <input type="hidden" name="operation" value="delete" id="">
+                                        <input name="wishlist_slug" type="hidden" value="{{product.slug}}">
+                                    {% endif %}
+                                
+                                </div>
+                                </form>
+                            
+                        </div>
+                        <div class="add-to-cart">
+                            {% if product not in cart %}
+									<form action="{% url "card" %}" method="POST">
+									{% csrf_token %}
+									<input name="product_slug" type="hidden" value="{{product.slug}}">
+									<input type="hidden" name="operation" value="add" id="">
+									<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i>Add to Cart</button>
+								</form>
+							{% else %}
+								<form action="{% url "card" %}" method="POST">
+									{% csrf_token %}
+									<input name="delete_slug" type="hidden" value="{{product.slug}}">
+									<input type="hidden" name="operation" value="delete" id="">
+									<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i>Delete from Cart</button>
+								</form>
+							{% endif %}
+                        </div>
+                    </div>
+                </div>
+                <!-- /product -->
+                {% endfor %}
+        
+                
+            </div>
+            <!-- /store products -->
+  
+        </div>
+    </div>
+</div>
+
+{% endblock %}

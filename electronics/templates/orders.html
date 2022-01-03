@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static "css/orders.css" %}">
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-3 border-right">
+            <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img src={% if user_info.image %}"{{user_info.image.url}}" {% else %}"{% static "img/no_profile.png" %}" {% endif %} class="rounded-circle" width="150px" ><span class="font-weight-bold my-3">{{user.first_name}} {{user.last_name}}</span><span class="text-black-50">{{user.email}}</span><span> </span></div>
+          <div class="d-flex align-items-start justify-content-center">
+            <ul>
+              <li><a class="nav-link text-secondary" href="{% url "profile" %}">Profile</a></li>
+              <hr>
+              <li><a class="nav-link text-secondary" href="{% url "card" %}">Card</a></li>
+              <hr>
+              <li><a class="nav-link text-secondary" href="{% url "myorders" %}">Orders</a></li>
+              <hr>
+              <li><a class="nav-link text-secondary" href="{% url "changepassword" %}">Change Password</a></li>
+              <hr>
+              <li><a class="nav-link text-secondary" href="{% url "address" %}">Addresses</a></li>
+              <hr>
+              <li><a class="nav-link text-secondary" href="{% url "payment_methods" %}">Payment Methods</a></li>
+              <hr>
+              <li><a class="nav-link text-secondary" href="{% url "wishlist" %}">Wish List</a></li>
+              <hr>
+            </ul>
+           
+          </div>
+        </div>
+        <div class="col-md-9 border-right my-3">
+
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Pending Orders</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Past Orders</button>
+                </li>
+              </ul>
+              <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    {% if confirmed_orders %}
+                        {% for order in confirmed_orders %}
+                        <article class="card">
+               
+                            <div class="card-body">
+                                <h6>Order ID: {{order.order_code}}</h6>
+                                <article class="card">
+                                    <div class="card-body row">
+                                        <div class="col"> <strong>Order Date:</strong> <br>{{order.order_date}} </div>
+                                        <div class="col"> <strong>Shipping BY:</strong> <br> SEATTY </div>
+                                        <div class="col"> <strong>Status:</strong> <br> {{order.status}} </div>
+                                        <div class="col"> <strong>Total:</strong> <br> {{order.total}} TL </div>
+                                    </div>
+                                </article>
+                                <div class="track">
+                                    {% if order.status == "Order Received" %}
+                                    <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order confirmed</span> </div>
+                                    <div class="step"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Shipped</span> </div>
+                                    <div class="step"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> On the way </span> </div>
+                                    <div class="step"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text">Delivered</span> </div>
+                                    {% endif %}
+        
+                                    {% if order.status == "Shipped" %}
+                                    <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order confirmed</span> </div>
+                                    <div class="step active"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Shipped</span> </div>
+                                    <div class="step"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> On the way </span> </div>
+                                    <div class="step"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text">Delivered</span> </div>
+                                    {% endif %}
+        
+                                    {% if order.status == "On the way" %}
+                                    <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order confirmed</span> </div>
+                                    <div class="step active"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Shipped</span> </div>
+                                    <div class="step active"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> On the way </span> </div>
+                                    <div class="step"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text">Delivered</span> </div>
+                                    {% endif %}
+        
+                                    {% if order.status == "Delivered" %}
+                                    <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order confirmed</span> </div>
+                                    <div class="step active"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Shipped</span> </div>
+                                    <div class="step active"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> On the way </span> </div>
+                                    <div class="step active"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text">Delivered</span> </div>
+                                    {% endif %}
+                                </div>
+                                <hr>
+                                <ul class="row">
+                                    {% for product in order.product.all %}
+                                    <li class="col-md-4">
+                                        <figure class="itemside mb-3">
+                                            <div class="aside"> <a href="{% url "product" product.slug %}"><img src="{{product.image.url}}" class="img-sm border"></a></div>
+                                            <figcaption class="info align-self-center">
+                                                <p class="title">{{product.marka.name}} <br> {{product.model}}</p> <span class="text-muted">
+                                                    {% if product.discount_applied %}
+                                                    {{product.discount_price}} 
+                                                    {% else %}
+                                                    {{product.price}} 
+                                                    {% endif %}
+                                                    TL
+                                                 </span>
+                                            </figcaption>
+                                        </figure>
+                                    </li>
+                                    {% endfor %}
+                                    {% if order.is_cancelled %}
+                                    <p class="h6 text-center text-danger">We received your cancellation request. We'll let you know!</p>
+                                    {% else %}
+                                    <a class="btn btn-danger" href="{% url "cancelorder" %}?id={{order.id}}">Cancel</a>
+                                    {% endif %}
+                                </ul>
+
+                                <hr> 
+                            </div>
+                        </article>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                    {% if delivered_orders %}
+                    {% for order in delivered_orders %}
+                    <article class="card">
+           
+                        <div class="card-body">
+                            <h6>Order ID: {{order.order_code}}</h6>
+                            <article class="card">
+                                <div class="card-body row">
+                                    <div class="col"> <strong>Order Date:</strong> <br>{{order.order_date}} </div>
+                                    <div class="col"> <strong>Shipping BY:</strong> <br> SEATTY </div>
+                                    <div class="col"> <strong>Status:</strong> <br> {{order.status}} </div>
+                                    <div class="col"> <strong>Total:</strong> <br> {{order.total}} TL </div>
+                                </div>
+                            </article>
+                            <div class="track">
+                                {% if order.status == "Order Received" %}
+                                <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order confirmed</span> </div>
+                                <div class="step"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Shipped</span> </div>
+                                <div class="step"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> On the way </span> </div>
+                                <div class="step"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text">Delivered</span> </div>
+                                {% endif %}
+    
+                                {% if order.status == "Shipped" %}
+                                <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order confirmed</span> </div>
+                                <div class="step active"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Shipped</span> </div>
+                                <div class="step"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> On the way </span> </div>
+                                <div class="step"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text">Delivered</span> </div>
+                                {% endif %}
+    
+                                {% if order.status == "On the way" %}
+                                <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order confirmed</span> </div>
+                                <div class="step active"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Shipped</span> </div>
+                                <div class="step active"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> On the way </span> </div>
+                                <div class="step"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text">Delivered</span> </div>
+                                {% endif %}
+    
+                                {% if order.status == "Delivered" %}
+                                <div class="step active"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order confirmed</span> </div>
+                                <div class="step active"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Shipped</span> </div>
+                                <div class="step active"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> On the way </span> </div>
+                                <div class="step active"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text">Delivered</span> </div>
+                                {% endif %}
+                            </div>
+                            <hr>
+                            <ul class="row">
+                                {% for product in order.product.all %}
+                                <li class="col-md-4">
+                                    <figure class="itemside mb-3">
+                                        <div class="aside"> <a href="{% url "product" product.slug %}"><img src="{{product.image.url}}" class="img-sm border"></a></div>
+                                        <figcaption class="info align-self-center">
+                                            <p class="title">{{product.marka.name}} <br> {{product.model}}</p> <span class="text-muted">
+                                                {% if product.discount_applied %}
+                                                {{product.discount_price}} 
+                                                {% else %}
+                                                {{product.price}} 
+                                                {% endif %}
+                                                TL
+                                             </span>
+                                        </figcaption>
+                                    </figure>
+                                    <a class="btn btn-success btn-sm" href="{% url "singleorder" product.id %}?order_id={{order.id}}">Details</a>
+                                </li>
+                                {% endfor %}
+                                       
+                            </ul>
+                            {% if order.is_returned %}
+                            <p class="mt-3 text-danger"> <b>This order has a return request. We'll take a look and let you know</b></p>
+                            {% endif %}
+                            <hr> 
+                        </div>
+                    </article>
+                    {% endfor %}
+                {% endif %}
+                </div>
+              </div>
+
+
+        
+        </div>
+    </div>
+</div>
+{% endblock %}

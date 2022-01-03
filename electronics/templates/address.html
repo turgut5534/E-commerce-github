@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<link rel="stylesheet" href="https://allyoucan.cloud/cdn/icofont/1.0.1/icofont.css" integrity="sha384-jbCTJB16Q17718YM9U22iJkhuGbS0Gd2LjaWb4YJEZToOPmnKDjySVa323U+W7Fv" crossorigin="anonymous">
+
+<div class="container my-5">
+    <div class="row">
+        
+        <div class="col-md-12">
+            <div class="osahan-account-page-right shadow-sm bg-white p-4 h-100">
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade  active show" id="addresses" role="tabpanel" aria-labelledby="addresses-tab">
+                        <h4 class="font-weight-bold mt-0 mb-4">Manage Addresses</h4>
+                        <div class="row">
+                            {% for adres in address %}
+                            <div class="col-md-6">
+                                <div class="bg-white card addresses-item mb-4 border border-primary shadow">
+                                    <div class="gold-members p-4">
+                                        <div class="media">
+                                            <div class="mr-3"><i class="icofont-ui-home icofont-3x"></i></div>
+                                            <div class="media-body">
+                                                <h6 class="mb-1 text-secondary">{{adres.kind}}</h6>
+                                                <p class="text-black">{{adres.full_address}}, {{adres.district}}  , {{adres.city}}
+                                                </p>
+                                                <p class="mb-0 text-black font-weight-bold">
+                                                    <a class="text-primary mr-3" data-toggle="modal" data-target="#add-address-modal" href="{% url "edit_address" adres.id %}?from={{url}}"><i class="icofont-ui-edit"></i> EDIT</a> 
+                                                    <a class="text-danger" data-toggle="modal" data-target="#delete-address-modal" href="{% url "delete_address" adres.id %}?from={{url}}"><i class="icofont-ui-delete"></i> DELETE</a></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            <div class="col-md-6">
+                                <div class="bg-white card addresses-item mb-4 border border-primary shadow">
+                                    <div class="gold-members ">
+                                        <div class="d-flex justify-content-center">
+                                            <div class="my-5 mx-5  ">
+                                                <a class="nav-link" href="{% url "add_address" %}?from={{url}}">Add a New Address</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

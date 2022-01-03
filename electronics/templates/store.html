@@ -1,0 +1,433 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static "css/store_vertical.css" %}">
+
+		<!-- BREADCRUMB -->
+		<div id="breadcrumb" class="section">
+			<!-- container -->
+			<div class="container">
+				<!-- row -->
+				<div class="row">
+					<div class="col-md-12">
+						<ul class="breadcrumb-tree">
+							<li><a href="{% url "homepage" %}">Home</a></li>
+							<li><a href="{% url "category" %}">All Categories</a></li>
+							<li class="active">{{name|title}} ({{result}} results)</li>
+						</ul>
+					</div>
+				</div>
+				<!-- /row -->
+			</div>
+			<!-- /container -->
+		</div>
+		<!-- /BREADCRUMB -->
+		<!-- SECTION -->
+		<div class="section">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-3 col-md-12">
+						<div class="aside">
+							<h3 class="aside-title">Price</h3>
+							<div class="price-filter">
+								<div id="price-slider"></div>
+								<label for="">Minimum</label> <br>
+								<div class="input-number">
+									<input name="min_price" id="price-minn" type="number">
+									<span class="qty-up">+</span>
+									<span class="qty-down">-</span>
+								</div>
+					<br>
+								<label for="">Maximum</label> <br>
+								<div class="input-number ">
+									<input name="max_price" id="price-maxx" type="number">
+									<span class="qty-up">+</span>
+									<span class="qty-down">-</span>
+								</div>
+							</div>
+						</div>
+						<!-- /aside Widget -->
+
+						<!-- aside Widget -->
+						<div class="aside">
+							<h3 class="aside-title">Brand</h3>
+							<div class="checkbox-filter">
+								{% for brand in brands %}
+								<div class="input-checkbox">
+									<input type="checkbox" id="{{brand.name}}" name="markalar">
+									<label for="{{brand.name}}">
+										<span></span>
+										{{brand.name}}
+									</label>
+								</div>
+								{% endfor %}
+							</div>
+						</div>
+
+						<a class="btn btn-danger my-3" href="{% url "productsincategory" name %}" onclick="this.href+='?brand='+document.getElementsByName('markalar').value+'&min_price='+ document.getElementById('price-minn').value+'&max_price='+ document.getElementById('price-maxx').value+'&view={{get_view}}'">Filter</a>
+						
+						<!-- /aside Widget -->
+
+						<!-- aside Widget -->
+						<div class="aside">
+							<h3 class="aside-title">Top selling</h3>
+							{% for top in top_selling %}
+							<div class="product-widget">
+								<div class="product-img">
+									<img src="{{top.image.url}}" alt="">
+								</div>
+								<div class="product-body">
+									<p class="product-category">In Stock: {{top.stock}}</p>
+									<h3 class="product-name"><a href="{% url "product" top.slug %}">{{top.marka.name}} {{top.model}}</a></h3>
+									<h4 class="product-price">{{top.price}} TL <del class="product-old-price"></del></h4>
+								</div>
+							</div>
+							{% endfor %}
+							
+						</div>
+						<!-- /aside Widget -->
+					</div>
+					<!-- /ASIDE -->
+
+					<!-- STORE -->
+					<div id="store" class="col-md-12 col-lg-9">
+						<!-- store top filter -->
+						<div class="store-filter clearfix">
+							<div class="store-sort">
+								<div class="row">
+									<div class="col-4">
+										<a class="nav-link text-secondary" href="{% url "productsincategory" categoryofproducts %}">Popular</a>
+									</div>
+									<div class="col-4">
+										<a class="nav-link text-secondary" href="{% url "productsincategory" categoryofproducts %}" onclick="this.href+='?sort_by=price'+'&view={{get_view}}'">Price</a>
+									</div>
+									<div class="col-4">
+										<a class="nav-link text-secondary" href="">Sale</a>
+									</div>
+								</div>
+							</div>
+							<ul class="store-grid">
+								{% if not is_vertical %}
+								<li class="active"><i class="fa fa-th"></i></li>
+								<li><a href="{% url "productsincategory" categoryofproducts %} " onclick="this.href+='?view=vertical' "><i class="fa fa-th-list"></i></a></li>
+								{% else %}
+								<li class=""> <a href="{% url "productsincategory" categoryofproducts %} " onclick="this.href+='?view=normal' "><i class="fa fa-th"></i></a></li>
+								<li class="active"><i class="fa fa-th-list"></i></li>
+								{% endif %}
+								
+							</ul>
+						</div>
+						<!-- /store top filter -->
+
+						<!-- store products -->
+						{% if not is_vertical %}
+						<div class="row">
+							{% for product in products %}
+							<div class="col-md-6 col-lg-4 col-xs-6">
+								<div class="product">
+									<div class="product-img">
+										<img src="{{product.image.url}}" alt="">
+										<div class="product-label">	
+												{% if product.is_new %}
+												<span class="new">NEW</span>
+												{% endif %}											
+										</div>
+									</div>
+									<div class="product-body">
+										<p class="product-category">In Stock: {{product.stock}}</p>
+										<h3 class="product-name"><a class="nav-link text-dark" href="{% url "product" product.slug %}">{{product.marka.name}} {{product.model}}</a></h3>
+										<h4 class="product-price">
+											{% if product.discount %}
+											{{product.discount_price}} TL
+											<del class="product-old-price">{{product.price}}</del></h4>
+											{% else %}
+											{{product.price}} TL
+											{% endif %}
+											
+											 <del class="product-old-price"></del></h4>
+										<div class="product-rating">
+											{% if product.rating %}
+												{% for i in "x"|ljust:product.rating %}
+													<i class="fa fa-star"></i>
+												{% endfor %}
+											{% endif %}
+								
+										</div>
+										{% if user.is_authenticated %}
+										<div class="product-btns">
+											<button id="wishlist_{{product.slug}}" class="add-to-wishlist" onclick="get_wish('{{product.slug}}')">
+												<i id="heart_{{product.slug}}" class={% if product not in wishlist %}"fa fa-heart-o"{% else %}"fa fa-times"{% endif %}></i>
+												<span id="span_{{product.slug}}" class="tooltipp">{% if product not in wishlist %}Add to Wishlist{% else %}Delete from Wishlist{% endif %}</span>
+											</button>									
+										</div>
+										{% endif %}
+									</div>
+									<div class="add-to-cart">
+									
+											{% if user.is_authenticated %}
+											<button id="slug_{{product.slug}}" class="add-to-cart-btn" onclick="get_slug('{{product.slug}}')"><i class="fa fa-shopping-cart"></i>
+											   {% if product not in cart %}
+											   ADD TO CART
+											   {% else %}
+											   DELETE FROM CART
+											   {% endif %}
+											   </button>
+										   {% else %}
+										   <button id="slug_{{product.slug}}" class="add-to-cart-btn" onclick="get_slug('{{product.slug}}')"><i class="fa fa-shopping-cart"></i>
+											   {% if product not in card %}
+											   ADD TO CART
+											   {% else %}
+											   DELETE FROM CART
+											   {% endif %}
+											   </button>	
+										   {% endif %}
+									</div>
+								</div>
+							</div>
+							<!-- /product -->
+							{% endfor %}
+						{% else %}
+						<div class="d-flex justify-content-center row">
+							<div class="col-md-12">
+								{% for product in products %}
+								<div class="row p-2 bg-white border rounded">
+									<div class="col-md-3 mt-1"><a href="{% url "product" product.slug %}"><img class="img-fluid img-responsive rounded product-image" src="{{product.image.url}}"></a></div>
+									<div class="col-md-6 mt-1">
+										<h5 class="my-4"><a class="text-dark nav-link" href="{% url "product" product.slug %}">{{product.marka.name}} {{product.model}}</a></h5>
+										<div class="d-flex flex-row">
+											<div class="ratings mr-2">
+												{% if product.rating %}
+													{% for i in "x"|ljust:product.rating %}
+														<i class="fa fa-star"></i>
+													{% endfor %}
+												{% endif %}
+											</div>
+										</div>
+										<!-- <div class="mt-1 mb-1 spec-1"><span>100% cotton</span><span class="dot"></span><span>Light weight</span><span class="dot"></span><span>Best finish<br></span></div>
+										<div class="mt-1 mb-1 spec-1"><span>Unique design</span><span class="dot"></span><span>For men</span><span class="dot"></span><span>Casual<br></span></div>
+										<p class="text-justify text-truncate para mb-0">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.<br><br></p> -->
+									</div>
+									<div class="align-items-center align-content-center col-md-3 border-left mt-1">
+										<div class="d-flex flex-row align-items-center">
+											<h4 class="mr-1">
+												{% if product.discount_applied %}
+												<del class="product-old-price">{{product.price}}</del> <br>
+												<p class="text-danger">{{product.discount_price}} TL</p>
+												{% else %}
+												<p class="text-danger">{{product.price}} TL</p>
+												{% endif %}</h4>
+										</div>
+										<h6 class="text-success">Free shipping</h6>
+										<div class="d-flex flex-column mt-4">
+												<!-- {% if product not in cart %}
+												<form action="{% url "card" %}" method="POST">
+													{% csrf_token %}
+													<input name="product_slug" type="hidden" value="{{product.slug}}">
+													<input type="hidden" name="operation" value="add" id="">
+													<button class="add-to-cart-btn btn-danger"><i class="fa fa-shopping-cart"></i>Add to Cart</button>
+												</form>
+												{% else %}
+												<form action="{% url "card" %}" method="POST">
+													{% csrf_token %}
+													<input name="delete_slug" type="hidden" value="{{product.slug}}">
+													<input type="hidden" name="operation" value="delete" id="">
+													<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i>Delete from Cart</button>
+												</form>
+												{% endif %}
+											 -->
+											 {% if user.is_authenticated %}
+											 <button id="slug_{{product.slug}}" class="add-to-cart-btn btn btn-danger" onclick="get_slug('{{product.slug}}')"><i class="fa fa-shopping-cart"></i>
+												{% if product not in cart %}
+												ADD TO CART
+												{% else %}
+												DELETE FROM CART
+												{% endif %}
+												</button>
+											{% else %}
+											<button id="slug_{{product.slug}}" class="add-to-cart-btn btn btn-danger" onclick="get_slug('{{product.slug}}')"><i class="fa fa-shopping-cart"></i>
+												{% if product not in card %}
+												ADD TO CART
+												{% else %}
+												DELETE FROM CART
+												{% endif %}
+												</button>	
+											{% endif %}
+
+											
+											<!-- {% if product not in wishlist %}
+											<form action="{% url "wishlist" %}" method="POST">
+												{% csrf_token %}
+												<button class="btn btn-outline-primary btn-sm mt-2" type="submit">Add to wishlist</button>
+												<input type="hidden" name="operation" value="add" id="">
+												<input name="wishlist_slug" type="hidden" value="{{product.slug}}">
+											</form>
+											{% else %}
+											<form action="{% url "wishlist" %}" method="POST">
+												{% csrf_token %}
+												<button class="btn btn-outline-primary btn-sm mt-2" type="submit">Delete from wishlist</button>
+												<input type="hidden" name="operation" value="delete" id="">
+												<input name="wishlist_slug" type="hidden" value="{{product.slug}}">
+											</form>
+											{% endif %} -->
+											{% if user.is_authenticated %}
+											<div class="product-btns">
+												<button id="wishlist_{{product.slug}}" class="add-to-wishlist btn btn-success mt-2" onclick="get_wish('{{product.slug}}')">
+													<i id="heart_{{product.slug}}" class={% if product not in wishlist %}"fa fa-heart-o"{% else %}"fa fa-heart"{% endif %}></i>
+													<span id="span_{{product.slug}}" class="tooltipp">{% if product not in wishlist %}Add to Wishlist{% else %}Delete from Wishlist{% endif %}</span>
+												</button>									
+											</div>
+											{% endif %}
+										</div>
+									</div>
+								</div>
+								{% endfor %}
+								
+							</div>
+						</div>
+						{% endif %}
+
+							
+						</div>
+						<!-- /store products -->
+
+						<!-- store bottom filter -->
+						<div class="store-filter clearfix" >
+							<span class="store-qty">Showing {{result}} of 12 products</span>
+							<ul class="store-pagination">
+								{% if has_previous %}
+									<li><a href="{% url "productsincategory" categoryofproducts %}?page={{previous_page}}"><i class="fa fa-angle-left"></i></a></li>
+								{% endif %}
+								{% for i in range %}
+									{% if i == current_page %}
+									<li class="active">{{i}}</li>
+									{% else %}
+									<li><a href="{% url "productsincategory" categoryofproducts %}?page={{i}}&view={{get_view}}">{{i}}</a></li>
+									{% endif %}
+										
+								{% endfor %}
+								{% if has_next %}
+									<li><a class="" href="{% url "productsincategory" categoryofproducts %}?page={{next_page}}&view={{get_view}}"><i class="fa fa-angle-right"></i></a></li>
+								{% endif %}
+							
+							</ul>
+						</div>
+						<!-- /store bottom filter -->
+					</div>
+					<!-- /STORE -->
+				</div>
+				<!-- /row -->
+			</div>
+			<!-- /container -->
+		</div>
+		<!-- /SECTION -->
+
+	
+	
+		<script>
+		
+			var have_slug;;
+			function get_slug(slug) {
+				have_slug=slug
+			}
+	
+			$(".add-to-cart-btn").on("click", function(){
+				var slug= have_slug
+				var amount= parseInt(document.getElementById("qty").innerText)
+				console.log(document.getElementById("qty").innerText)
+				if (document.getElementById("slug_"+slug).innerText.includes("ADD")) {
+					console.log("Adding:", slug)
+					$.ajax({
+						url: "{% url "card" %}",
+						type: "POST",
+						headers:{
+							"X-CSRFToken": "{{csrf_token}}"
+						},
+						data:{"product_slug": slug, "operation": "add"},
+						success: function(resp){
+							document.querySelector('#slug_'+slug).innerHTML = 'DELETE FROM CART';
+							document.getElementById("qty").innerText= amount+1
+						},
+						error: function(resp){
+							console.log("something went wrong");
+						}
+					});
+				}
+	
+				else {
+					console.log("Deleting")
+					$.ajax({
+						url: "{% url "card" %}",
+						type: "POST",
+						headers:{
+							"X-CSRFToken": "{{csrf_token}}"
+						},
+						data:{"product_slug": slug, "operation": "delete"},
+						success: function(resp){
+							document.querySelector('#slug_'+slug).innerHTML = 'ADD TO CART';
+							document.getElementById("qty").innerText= amount-1
+						},
+						error: function(resp){
+							console.log("something went wrong");
+						}
+					});
+				}
+	
+			});
+		</script>
+	
+	
+	<script>
+			
+		var have_wish;;
+		function get_wish(slug) {
+			have_wish=slug
+		}
+	
+		$(".add-to-wishlist").on("click", function(){
+			var slug= have_wish
+			if (document.getElementById("heart_"+slug).className.includes("heart-o")) {
+				console.log("Adding:", slug)
+				$.ajax({
+					url: "{% url "wishlist" %}",
+					type: "POST",
+					headers:{
+						"X-CSRFToken": "{{csrf_token}}"
+					},
+					data:{"wishlist_slug": slug, "operation": "add"},
+					success: function(resp){
+						document.getElementById("heart_"+slug).className="fa fa-heart";
+						document.getElementById("span_"+slug).innerText="Delete from Wishlist";
+						
+					},
+					error: function(resp){
+						console.log("something went wrong");
+					}
+				});
+			}
+	
+			else {
+				console.log("Deleting")
+				$.ajax({
+					url: "{% url "wishlist" %}",
+					type: "POST",
+					headers:{
+						"X-CSRFToken": "{{csrf_token}}"
+					},
+					data:{"wishlist_slug": slug, "operation": "delete"},
+					success: function(resp){
+						document.getElementById("heart_"+slug).className="fa fa-heart-o";
+						document.getElementById("span_"+slug).innerText="Add to Wishlist";
+					},
+					error: function(resp){
+						console.log("something went wrong");
+					}
+				});
+			}
+	
+		});
+	</script>
+	
+	
+
+	{% endblock %}
+

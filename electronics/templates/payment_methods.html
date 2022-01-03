@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static "css/payment_methods.css" %}">
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<h1 class="text-center my-5">Payment Methods</h1>
+<div class="container ozel">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        {% for payment in payments %}
+        <div class="col-md-6">
+            <div class="payment-card">
+                {% if payment.kind == "Visa" %}
+                <i class="fa fa-cc-visa payment-icon-big text-success"></i>
+                {% else %}
+                <i class="fa fa-cc-mastercard payment-icon-big text-danger"></i>
+                {% endif %}
+                <h2>
+                    {{payment.number}}
+                </h2>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <small>
+                            <strong>Name:</strong> {{payment.holder}}
+                        </small>
+                    </div>
+                    <div class="col-sm-6 text-end">
+                        <small>
+                            <strong>Expiry date:</strong> {{payment.expiry}}
+                        </small>
+                    </div>
+                   
+                    <div class="col-6 mt-3">
+                        <form action="{% url "payment_methods" %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="number" value="{{payment.number}}" id="">
+                            <button class="btn btn-danger align-items-end">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        <div class="col-6">
+            <div class="payment-card py-5">
+                <a class="nav-link text-center" href="{% url "add_cart" %}"><h2 class="text-dark">+ Add New Cart</h2></a>
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+{% endblock %}

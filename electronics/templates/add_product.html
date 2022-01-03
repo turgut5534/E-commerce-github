@@ -1,0 +1,139 @@
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+<h1 class="text-center">Products</h1>
+<form class="form-horizontal" action="{% url "addproduct" %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="form-group">
+    <label class="col-md-4 control-label" for="product_id">Image 1</label>  
+    <div class="col-md-4">
+    <input type="file" name="image1" id="">
+    </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-4 control-label" for="product_id">Image 2</label>  
+        <div class="col-md-4">
+        <input type="file" name="image2" id="">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-4 control-label" for="product_id">Image 3</label>  
+        <div class="col-md-4">
+        <input type="file" name="image3" id="">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-4 control-label" for="product_id">Image 4</label>  
+        <div class="col-md-4">
+        <input type="file" name="image4" id="">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-4 control-label" for="product_id">Marka</label>  
+        <div class="col-md-4">
+            <select name="marka" id="cars">
+                {% for marka in markas %}
+                    <option value="{{marka.name}}">{{marka.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+    <label class="col-md-4 control-label" for="product_name">Model</label>  
+    <div class="col-md-4">
+    <input id="model_id" name="model" placeholder="" class="form-control input-md" required="" type="text">
+    </div>
+    </div>
+
+    <div class="form-group">
+    <label class="col-md-4 control-label" for="product_categorie">Price</label>
+    <div class="col-md-4">
+        <input id="price_id" name="price" placeholder="" class="form-control input-md" required="" type="text">
+    </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-4 control-label" for="product_categorie">Weight</label>
+        <div class="col-md-4">
+            <input id="weight_id" name="weight" placeholder="" class="form-control input-md" required="" type="text">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-4 control-label" for="product_categorie">Category</label>
+        <div class="col-md-4">
+        <select value="" name="category" id="cate" onclick="get_specs()">
+            <option selected value=""></option>
+            {% for category in categories %}
+                <option value="{{category.name}}">{{category.name|title}}</option>
+            {% endfor %}
+        </select>
+        </div>
+    </div>
+
+    <div id="data" class="form-group"></div>
+    
+
+    <div class="form-group">
+        <label class="col-md-4 control-label" for="product_categorie">Warranty</label>
+        <div class="col-md-4">
+            <input id="warranty_id" name="warranty" placeholder="" class="form-control input-md" required="" type="text">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-4 control-label" for="product_categorie">Stock</label>
+        <div class="col-md-4">
+            <input id="stock_id" name="stock" placeholder="" class="form-control input-md" required="" type="number">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-4 control-label" for="product_categorie">Is New?</label>
+        <div class="col-md-4">
+        <input type="checkbox" name="new" id="">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-4 control-label" for="product_categorie">Is Featured?</label>
+        <div class="col-md-4">
+        <input type="checkbox" name="featured" id="">
+        </div>
+    </div>
+
+    <!-- Button -->
+    <div class="form-group">
+    <label class="col-md-4 control-label" for="singlebutton">Single Button</label>
+    <div class="col-md-4">
+        <button id="singlebutton" name="singlebutton" class="btn btn-primary">Save</button>
+    </div>
+    </div>
+</form>
+
+
+<script>
+    function get_specs() {
+        var categories= $('#cate');
+        if ( categories.val() != "") {
+        $.ajax({
+						url: "{% url "addproduct" %}",
+						type: "GET",
+						data:{"category": categories.val()},
+						success: function(resp){
+							$("#data").html(resp)
+						},
+						error: function(resp){
+							console.log("something went wrong");
+						}
+					});
+        }
+        }
+</script>
